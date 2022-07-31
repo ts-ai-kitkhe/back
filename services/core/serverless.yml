@@ -1,0 +1,9 @@
+service: core
+
+provider:
+  name: aws
+  runtime: python3.8
+
+functions:
+  hello:
+    handler: functions.hello-world.handler.hello
