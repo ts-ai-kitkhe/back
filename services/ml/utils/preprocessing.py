@@ -290,7 +290,7 @@ def input_for_frontend(
     """
     import json
 
-    assert len(corners) == len(predictions)
+    # assert len(corners) == len(predictions)
     model_response = [
         {
             "id": i,
@@ -298,7 +298,7 @@ def input_for_frontend(
             "confidence": float(predictions[i][1]),
             "corners": corners[i],
         }
-        for i in range(len(corners))
+        for i in range(len(predictions))
     ]
 
     # with open(json_path, "w", encoding="utf8") as f:
