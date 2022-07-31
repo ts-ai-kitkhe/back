@@ -2,8 +2,17 @@ service: ml
 
 provider:
   name: aws
+  region: eu-central-1
   runtime: python3.8
 
 functions:
   hello:
     handler: functions.hello-world.handler.hello
+
+  processImage:
+    handler: functions.process-image.handler.hello
+    events:
+      - s3:
+          bucket: assets.ts-ai-kitkhe.ge
+          event: s3:ObjectCreated:*
+          existing: true

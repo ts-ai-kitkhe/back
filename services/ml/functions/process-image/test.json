@@ -1,0 +1,38 @@
+{
+    "Records": [
+        {
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "eu-central-1",
+            "eventTime": "2022-07-31T14:05:36.515Z",
+            "eventName": "ObjectCreated:Put",
+            "userIdentity": {
+                "principalId": "AWS:AROA3PBRS5CNHR5IA2O2A:s3-assets-get-pre-signed-url"
+            },
+            "requestParameters": {
+                "sourceIPAddress": "217.147.224.170"
+            },
+            "responseElements": {
+                "x-amz-request-id": "KK2FFDV1F3Y7QRX4",
+                "x-amz-id-2": "Z/xDasbinJTqkaOsXC7lD4C5/syLTxpaTrQv/0M9qcBqq8qW5Gpj0j/jMDzjkIHkJ4ZfdNfzrOm/4juZhuc0DChq2jcBpyht"
+            },
+            "s3": {
+                "s3SchemaVersion": "1.0",
+                "configurationId": "ml-dev-processImage-68a737133cefb25bff959852b8f04754",
+                "bucket": {
+                    "name": "assets.ts-ai-kitkhe.ge",
+                    "ownerIdentity": {
+                        "principalId": "AUO8B1F6RM777"
+                    },
+                    "arn": "arn:aws:s3:::assets.ts-ai-kitkhe.ge"
+                },
+                "object": {
+                    "key": "0002.jpg",
+                    "size": 140451,
+                    "eTag": "1454e3f28f2d8dc1977e7b29da5e1fa0",
+                    "sequencer": "0062E68C306EAD55BA"
+                }
+            }
+        }
+    ]
+}

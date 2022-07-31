@@ -2,6 +2,7 @@ service: core
 
 provider:
   name: aws
+  region: eu-central-1
   runtime: python3.8
 
 functions:
