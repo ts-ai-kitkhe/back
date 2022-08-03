@@ -36,4 +36,5 @@ sls invoke local -f <func> -p <event-path> --service=<service>
 ```
 
 eg. `sls invoke local -f processImage -p functions/process-image/test.json --service=ml`
+
 eg. `sls invoke local -f hello --service=ml`
