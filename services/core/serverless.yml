@@ -3,8 +3,35 @@ service: core
 provider:
   name: aws
   region: eu-central-1
-  runtime: python3.8
+  runtime: nodejs16.x
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Resource: "arn:aws:s3:::assets.ts-ai-kitkhe.ge"
+          Action: "s3:*"
+custom:
+  bundle:
+    sourcemaps: true # Enable source maps
+    caching: true # Enable Webpack caching
+    concurrency: 2 # Set desired concurrency, defaults to the number of available cores
+    packager: yarn # Specify a packager, 'npm' or 'yarn'. Defaults to 'npm'.
 
 functions:
   hello:
+    runtime: python3.8
     handler: functions.hello-world.handler.hello
+
+  getSignedUrl:
+    handler: functions/get-signed-url/handler.main
+    environment:
+      AWS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
+    events:
+      - httpApi:
+          method: POST
+          path: /test
+
+plugins:
+  - serverless-bundle
