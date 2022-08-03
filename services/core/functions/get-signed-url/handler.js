@@ -19,9 +19,9 @@ exports.main = async (event, context) => {
     ContentType: body.contentType,
   };
 
-  const url = s3.getSignedUrl("putObjectAcl", params);
+  const url = s3.getSignedUrl("putObject", params);
   const responseBody = { url };
-  console.log(responseBody);
+
   return {
     statusCode: 200,
     body: JSON.stringify(responseBody),
