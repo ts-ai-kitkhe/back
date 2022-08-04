@@ -37,6 +37,51 @@ functions:
           method: POST
           path: /test
 
+  booksGet:
+    handler: functions/books-get/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: GET
+          path: /books/{id}
+
+  booksGetAll:
+    handler: functions/books-get-all/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: GET
+          path: /books
+
+  booksCreate:
+    handler: functions/books-create/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: POST
+          path: /books
+
+  booksUpdate:
+    handler: functions/books-update/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: POST
+          path: /books/{id}
+
+  booksDelete:
+    handler: functions/books-delete/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: DELETE
+          path: /books/{id}
+
 resources:
   Resources:
     booksTable:
