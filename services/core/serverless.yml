@@ -15,7 +15,11 @@ provider:
         - Effect: "Allow"
           Resource: "arn:aws:s3:::assets.ts-ai-kitkhe.ge/*"
           Action: "s3:*"
+
 custom:
+  # Dynamo DBs
+  DYNAMO_DB_BOOKS_TABLE_NAME: books
+  # Plugins
   bundle:
     sourcemaps: false # Enable source maps
     caching: false # Enable Webpack caching
@@ -31,6 +35,20 @@ functions:
       - httpApi:
           method: POST
           path: /test
+
+resources:
+  Resources:
+    booksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 
 plugins:
   - serverless-bundle
