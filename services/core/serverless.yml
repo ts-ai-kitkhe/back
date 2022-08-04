@@ -4,6 +4,7 @@ provider:
   name: aws
   region: eu-central-1
   runtime: nodejs16.x
+  versionFunctions: false
   httpApi:
     cors: true
   iam:
