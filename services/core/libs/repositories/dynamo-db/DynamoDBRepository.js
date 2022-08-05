@@ -1,9 +1,9 @@
 export default class DynamoDBRepository {
-  constructor(dynamoDbClient, tableName) {
+  constructor(dynamoDBClient, tableName) {
     if (!tableName) {
       throw new Error("tableName not defined in env");
     }
-    this.client = dynamoDbClient;
+    this.client = dynamoDBClient;
   }
 
   async get(key, options) {}
