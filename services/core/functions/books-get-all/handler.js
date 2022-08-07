@@ -1,6 +1,11 @@
-export async function main(event, context) {
+import { BookRepository } from "../../libs";
+
+export async function main() {
+  const bookRepository = new BookRepository();
+  const books = await bookRepository.scan();
+
   return {
     statusCode: 200,
-    body: "books-get-all",
+    body: JSON.stringify(books),
   };
 }

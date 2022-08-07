@@ -26,24 +26,41 @@ export default class DynamoDBRepository {
 
   async put(item, opts) {
     const now = new Date();
-    const model = await this.client
+    item = {
+      ...item,
+      [this.UPDATED_AT_FIELD_NAME]: now.getTime(),
+      [this.CREATED_AT_FIELD_NAME]: now.getTime(),
+    };
+    await this.client
       .put({
-        tableName: this.tableName,
-        Item: {
-          ...item,
-          [this.UPDATED_AT_FIELD_NAME]: now.getTime(),
-          [this.CREATED_AT_FIELD_NAME]: now.getTime(),
-        },
+        TableName: this.tableName,
+        Item: item,
         ...opts,
       })
       .promise();
-    return new this.Cls(model.Attributes);
+    return Object.assign(new this.Cls(), item);
+  }
+
+  async update(item, opts) {
+    const now = new Date();
+    item = {
+      ...item,
+      [this.UPDATED_AT_FIELD_NAME]: now.getTime(),
+    };
+    await this.client
+      .put({
+        TableName: this.tableName,
+        Item: item,
+        ...opts,
+      })
+      .promise();
+    return Object.assign(new this.Cls(), item);
   }
 
   async delete(key, opts) {
     return this.client
       .delete({
-        tableName: this.tableName,
+        TableName: this.tableName,
         Key: key,
         ...opts,
       })
@@ -53,7 +70,7 @@ export default class DynamoDBRepository {
   async scan(opts) {
     const data = await this.client
       .scan({
-        tableName: this.tableName,
+        TableName: this.tableName,
         ...opts,
       })
       .promise();

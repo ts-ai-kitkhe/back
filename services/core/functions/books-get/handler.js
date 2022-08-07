@@ -1,8 +1,10 @@
 import { BookRepository } from "../../libs";
 
-export async function main(event, context) {
+export async function main(event) {
+  const bookId = event.pathParameters.id;
+
   const bookRepository = new BookRepository();
-  const book = await bookRepository.get({ Id: event.pathParameters.id });
+  const book = await bookRepository.get({ Id: bookId });
 
   return {
     statusCode: 200,

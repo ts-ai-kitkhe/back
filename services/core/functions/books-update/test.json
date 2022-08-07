@@ -1,0 +1,9 @@
+{
+  "body": {
+    "title": "Lorem Ipsum Dolor",
+    "authorName": "Sit Amet"
+  },
+  "pathParameters": {
+    "id": "1d53fabb-5d76-4f45-92d1-3de646da3107"
+  }
+}
