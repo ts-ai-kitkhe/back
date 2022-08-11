@@ -4,4 +4,5 @@ export class Book extends BaseModel {
   Id;
   title;
   authorName;
+  year;
 }

@@ -1,8 +1,8 @@
 import * as AWS from "aws-sdk";
 
 export default class DynamoDBRepository {
-  UPDATED_AT_FIELD_NAME = "updatedAt";
   CREATED_AT_FIELD_NAME = "createdAt";
+  UPDATED_AT_FIELD_NAME = "updatedAt";
 
   constructor(tableName, Cls) {
     if (!tableName) {
