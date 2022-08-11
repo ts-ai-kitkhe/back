@@ -89,6 +89,11 @@ functions:
           method: DELETE
           path: /books/{id}
 
+  booksSeeder:
+    handler: functions/books-seeder/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+
 resources:
   Resources:
     booksTable:
