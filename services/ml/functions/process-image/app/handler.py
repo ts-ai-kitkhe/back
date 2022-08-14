@@ -40,11 +40,10 @@ def predict_characters(characters, filtered_corners):
         letter, confidence = np.argmax(prediction), np.max(prediction)
 
         predictions.append((le_name_mapping[letter], float(confidence)))
-        break
     return input_for_frontend(filtered_corners, predictions)
 
 
-def extract_ounding_boxes(img):
+def extract_bounding_boxes(img):
     binary_image = preprocess_image(img)
     # characteristics
     bounding_boxes = get_bounding_boxes(binary_image)
@@ -81,24 +80,37 @@ def extract_ounding_boxes(img):
 
 
 def main(event, context):
-    image_names = []
-
     for e in event["Records"]:
         bucket = e["s3"]["bucket"]["name"]
         key = e["s3"]["object"]["key"]
+        print(f"{bucket}/{key}: init...")
+
+        file_extension = key.rsplit(".", 1)[-1]
+        if file_extension not in ["jpg", "png", "jpeg", "webp"]:
+            print(file_extension, " continuing...")
+            continue
+
         obj = s3.Object(bucket, key)
 
         img_array = np.asarray(bytearray(obj.get()["Body"].read()), dtype=np.uint8)
+        print(f"{bucket}/{key}: img_array.shape={img_array.shape}")
+
         im = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
+        print(f"{bucket}/{key}: im.shape={im.shape}")
 
-        image_names.append(key)
-        print(img_array.shape)
-        print(im.shape)
+        print(f"{bucket}/{key}: extract_bounding_boxes...")
+        binary_image, filtered_corners = extract_bounding_boxes(im)
 
-        binary_image, filtered_corners = extract_ounding_boxes(im)
-
+        print(f"{bucket}/{key}: get_characters...")
         characters = get_characters(binary_image, filtered_corners)
+
+        print(f"{bucket}/{key}: predict_characters...")
         res = predict_characters(characters, filtered_corners)
 
-        object = s3.Object(bucket, f"{key.rsplit('.', 1)[0]}.json")
+        new_key = f"{key.rsplit('.', 1)[0]}.json"
+        object = s3.Object(bucket, new_key)
+
+        print(f"{bucket}/{new_key}: saving...")
         object.put(Body=json.dumps(res))
+
+        print(f"{bucket}/{key}: finish")
