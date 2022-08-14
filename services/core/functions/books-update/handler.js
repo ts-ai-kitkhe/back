@@ -9,10 +9,11 @@ export async function main(event) {
     Id: bookId,
     title: body.title,
     authorName: body.authorName,
+    year: body.year,
   });
 
   return {
     statusCode: 201,
-    body: book,
+    body: JSON.stringify(book),
   };
 }
