@@ -97,12 +97,14 @@ export async function main() {
     },
   ];
 
-  for (const book of books) {
-    await bookRepository.put({
-      Id: uuidv4(),
-      title: book.title,
-      authorName: book.author,
-      year: book.year,
-    });
-  }
+  await Promise.all(
+    books.map((book) =>
+      bookRepository.put({
+        Id: uuidv4(),
+        title: book.title,
+        authorName: book.author,
+        year: book.year,
+      })
+    )
+  );
 }
