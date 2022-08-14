@@ -6,6 +6,7 @@ provider:
   runtime: python3.8
   versionFunctions: false
   ecr:
+    scanOnPush: false
     images:
       s3ImageProcessor:
         path: ./functions/process-image
@@ -23,6 +24,7 @@ functions:
 
   processImage:
     image: s3ImageProcessor
+    timeout: 900
     events:
       - s3:
           bucket: assets.ts-ai-kitkhe.ge
