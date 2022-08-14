@@ -80,10 +80,8 @@ def extract_ounding_boxes(img):
     return binary_image, filtered_corners
 
 
-def hello(event, context):
+def main(event, context):
     image_names = []
-    loaded_images = []
-    images_predictions = []
 
     for e in event["Records"]:
         bucket = e["s3"]["bucket"]["name"]
@@ -94,27 +92,13 @@ def hello(event, context):
         im = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
 
         image_names.append(key)
-        loaded_images.append(im)
-
         print(img_array.shape)
         print(im.shape)
 
-    for img in loaded_images:
-
-        binary_image, filtered_corners = extract_ounding_boxes(img)
+        binary_image, filtered_corners = extract_ounding_boxes(im)
 
         characters = get_characters(binary_image, filtered_corners)
+        res = predict_characters(characters, filtered_corners)
 
-        images_predictions.append(predict_characters(characters, filtered_corners))
-
-        print(len(characters))
-
-    data = [
-        {"name": name, "predictions": pred}
-        for name, pred in zip(image_names, images_predictions)
-    ]
-    return {
-        "statusCode": 200,
-        "headers": {"content-type": "application/json; charset=utf-8"},
-        "body": json.dumps(data),
-    }
+        object = s3.Object(bucket, f"{key.rsplit('.', 1)[0]}.json")
+        object.put(Body=json.dumps(res))

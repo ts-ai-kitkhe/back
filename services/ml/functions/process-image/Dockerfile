@@ -8,4 +8,4 @@ RUN python3.8 -m pip install -r requirements.txt
 RUN python3.8 -m pip install opencv-python-headless
 
 # Set the CMD to your handler
-CMD ["handler.hello"]
+CMD ["handler.main"]
