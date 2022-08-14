@@ -5,13 +5,25 @@ provider:
   region: eu-central-1
   runtime: python3.8
   versionFunctions: false
+  ecr:
+    scanOnPush: true
+    images:
+      s3ImageProcessor:
+        path: ./functions/process-image
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Resource:
+            - "arn:aws:s3:::assets.ts-ai-kitkhe.ge/*"
+          Action: "s3:*"
 
 functions:
   hello:
     handler: functions.hello-world.handler.hello
 
   processImage:
-    handler: functions.process-image.handler.hello
+    image: s3ImageProcessor
     events:
       - s3:
           bucket: assets.ts-ai-kitkhe.ge

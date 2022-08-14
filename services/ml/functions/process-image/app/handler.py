@@ -1,22 +1,27 @@
+import cv2
 import json
-from tabnanny import verbose
 import boto3
 import numpy as np
-import cv2
 from tensorflow import keras
 from sklearn.preprocessing import LabelEncoder
-from utils.preprocessing import(
-    preprocess_image, get_corners, get_areas, get_boxes_sides_length,
-    filter_by_area, filter_by_sides, get_characters, 
-    remove_extra_space_around_characters, zero_padding,
-    input_for_frontend, get_bounding_boxes
+from utils.preprocessing import (
+    preprocess_image,
+    get_corners,
+    get_areas,
+    get_boxes_sides_length,
+    filter_by_area,
+    filter_by_sides,
+    get_characters,
+    remove_extra_space_around_characters,
+    zero_padding,
+    input_for_frontend,
+    get_bounding_boxes,
 )
 
-s3 = boto3.resource('s3')
+s3 = boto3.resource("s3")
 
-model_name = 'models/first_cnn/first_cnn.h5'
-label_encoder_name = 'models/first_cnn/first_cnn_label_encoder.npy'
-
+model_name = "models/first_cnn/first_cnn.h5"
+label_encoder_name = "models/first_cnn/first_cnn_label_encoder.npy"
 
 model = keras.models.load_model(model_name)
 le = LabelEncoder()
@@ -85,7 +90,7 @@ def hello(event, context):
         key = e["s3"]["object"]["key"]
         obj = s3.Object(bucket, key)
 
-        img_array = np.asarray(bytearray(obj.get()['Body'].read()), dtype=np.uint8)
+        img_array = np.asarray(bytearray(obj.get()["Body"].read()), dtype=np.uint8)
         im = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
 
         image_names.append(key)
@@ -93,21 +98,23 @@ def hello(event, context):
 
         print(img_array.shape)
         print(im.shape)
-    
+
     for img in loaded_images:
-        
-        binary_image, filtered_corners  = extract_ounding_boxes(img)
-        
+
+        binary_image, filtered_corners = extract_ounding_boxes(img)
+
         characters = get_characters(binary_image, filtered_corners)
 
         images_predictions.append(predict_characters(characters, filtered_corners))
 
         print(len(characters))
 
-    data = [{"name": name, "predictions": pred} for name, pred in zip(image_names, images_predictions)]    
+    data = [
+        {"name": name, "predictions": pred}
+        for name, pred in zip(image_names, images_predictions)
+    ]
     return {
-        'statusCode': 200,
-        'headers': {
-                "content-type":"application/json; charset=utf-8"},
-        'body': json.dumps(data)
-        }
+        "statusCode": 200,
+        "headers": {"content-type": "application/json; charset=utf-8"},
+        "body": json.dumps(data),
+    }

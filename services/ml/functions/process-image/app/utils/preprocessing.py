@@ -272,7 +272,7 @@ def filter_by_sides(
 
 
 def input_for_frontend(
-    corners: List[List[int]], predictions: List[Tuple[str, float]], json_path: str=""
+    corners: List[List[int]], predictions: List[Tuple[str, float]], json_path: str = ""
 ) -> None:
     """
     function generates json on the given path for frontend usage, each corner having its id as string.
