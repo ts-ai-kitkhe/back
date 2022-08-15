@@ -30,3 +30,6 @@ functions:
           bucket: assets.ts-ai-kitkhe.ge
           event: s3:ObjectCreated:*
           existing: true
+
+  generateText:
+    handler: functions.generate-text.handler.main
