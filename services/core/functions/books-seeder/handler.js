@@ -42,7 +42,7 @@ export async function main() {
     },
     {
       title: "რჩეული თხზულებანი",
-      author: "იოსებ ყოფშიძე",
+      author: "იოსებ ყიფშიძე",
       year: 1994,
     },
     {
