@@ -42,7 +42,7 @@ functions:
     events:
       - httpApi:
           method: POST
-          path: /test
+          path: /books/{id}/pages/signed-url
 
   booksGet:
     handler: functions/books-get/handler.main
