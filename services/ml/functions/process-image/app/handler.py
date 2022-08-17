@@ -40,9 +40,11 @@ def predict_characters(characters, filtered_corners):
         letter, confidence = np.argmax(prediction), np.max(prediction)
         # save top 3 predictions as well
         top_preds = [le_name_mapping[p] for p in (-prediction).argsort()[0]][:3]
-        top_confs = np.sort(prediction[0])[::-1][:3] 
-        
-        predictions.append((le_name_mapping[letter], confidence, (top_preds, top_confs)))
+        top_confs = np.sort(prediction[0])[::-1][:3]
+
+        predictions.append(
+            (le_name_mapping[letter], confidence, (top_preds, top_confs))
+        )
     return input_for_frontend(filtered_corners, predictions)
 
 
