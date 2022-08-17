@@ -10,6 +10,7 @@ export async function main(event, context) {
     title: body.title,
     authorName: body.authorName,
     year: body.year,
+    visibility: "Private",
   });
 
   return {

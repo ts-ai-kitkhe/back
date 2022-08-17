@@ -89,6 +89,7 @@ export async function main() {
         title: book.title,
         authorName: book.author,
         year: book.year,
+        visibility: "Public",
       })
     )
   );
