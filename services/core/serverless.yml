@@ -94,6 +94,15 @@ functions:
     environment:
       DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
 
+  authorsGetAll:
+    handler: functions/authors-get-all/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: GET
+          path: /authors
+
 resources:
   Resources:
     booksTable:
