@@ -62,6 +62,15 @@ functions:
           method: GET
           path: /books
 
+  booksGetAllAdmin:
+    handler: functions/books-get-all-admin/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: GET
+          path: /admin/books
+
   booksCreate:
     handler: functions/books-create/handler.main
     environment:
