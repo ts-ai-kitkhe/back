@@ -276,9 +276,9 @@ def input_for_frontend(
 ) -> List[Dict[str, Any]]:
     """
     function generates json on the given path for frontend usage, each corner having its id as string.
-    example: [{"id": 0, "letter": "ა", 
-               "confidence": 0.99, 
-               "corners": [[0, 1],[0, 3],[2, 0],[1, 0]], 
+    example: [{"id": 0, "letter": "ა",
+               "confidence": 0.99,
+               "corners": [[0, 1],[0, 3],[2, 0],[1, 0]],
                "top_letters": ["ა", "ბ", "გ"],
                "top_confidences": [0.3, 0.2, 0.1]]
                }]
@@ -306,7 +306,7 @@ def input_for_frontend(
             "top_confidences": [float(p) for p in predictions[i][2][1]],
         }
         for i in range(len(corners))
-    ] 
+    ]
 
     # with open(json_path, "w", encoding="utf8") as f:
     #     json.dump(model_response, f, ensure_ascii=False)
@@ -446,72 +446,3 @@ def remove_extra_space_around_characters(
     ):
         return binary_image
     return removed_extra_space_image
-
-
-def main():
-    # %%timeit
-    image_file = "data/raw/real_1.jpg"
-
-    img = load_image(image_file)
-    binary_image = preprocess_image(img)
-    # characteristics
-    bounding_boxes = get_bounding_boxes(binary_image)
-    corners = get_corners(bounding_boxes)
-    areas = get_areas(corners)
-    widths, heights = get_boxes_sides_length(corners)
-
-    # filters
-    filtered_areas, filtered_corners, area_mask = filter_by_area(
-        areas, corners, filter_value=0
-    )
-    filtered_widths, filtered_heights = (
-        np.array(widths)[np.array(area_mask)].tolist(),
-        np.array(heights)[np.array(area_mask)].tolist(),
-    )
-
-    filtered_corners, side_mask = filter_by_sides(
-        filtered_corners, filtered_widths, filtered_heights
-    )
-    filtered_widths, filtered_heights = (
-        np.array(filtered_widths)[np.array(side_mask)].tolist(),
-        np.array(filtered_heights)[np.array(side_mask)].tolist(),
-    )
-    filtered_areas = np.array(filtered_areas)[np.array(side_mask)].tolist()
-
-    filtered_areas, filtered_corners, area_mask = filter_by_area(
-        filtered_areas, filtered_corners, filter_value=np.mean(filtered_areas) / 2
-    )
-    filtered_widths, filtered_heights = (
-        np.array(widths)[np.array(area_mask)].tolist(),
-        np.array(heights)[np.array(area_mask)].tolist(),
-    )
-
-    characters = get_characters(binary_image, filtered_corners)
-
-    model_name = "models/first_cnn/first_cnn.h5"
-    label_encoder_name = "models/first_cnn/first_cnn_label_encoder.npy"
-
-    model = keras.models.load_model(model_name)
-    le = LabelEncoder()
-    le.classes_ = np.load(label_encoder_name, allow_pickle=True)
-    le_name_mapping = dict(zip(le.transform(le.classes_), le.classes_))
-
-    predictions = []
-    for c in characters:
-        preprocessed = zero_padding(
-            remove_extra_space_around_characters(c, extra_space_value=0)
-        )
-        image_cnn = np.zeros(shape=(1, 28, 28))
-        image_cnn[0] = zero_padding(
-            remove_extra_space_around_characters(c, extra_space_value=0)
-        )
-        prediction = model.predict(image_cnn)
-        letter, confidence = np.argmax(prediction), np.max(prediction)
-
-        predictions.append((le_name_mapping[letter], confidence))
-
-    input_for_frontend(filtered_corners, predictions, "models_predictions.json")
-
-
-if __name__ == "__main__":
-    main()
