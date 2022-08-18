@@ -10,6 +10,13 @@ provider:
   versionFunctions: false
   httpApi:
     cors: true
+    authorizers:
+      adminJWTAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_A5u5syC5t
+        audience:
+          - 4htkustm5ob7lqd45n0ovff66e
   iam:
     role:
       statements:
@@ -43,6 +50,8 @@ functions:
       - httpApi:
           method: POST
           path: /books/{id}/pages/signed-url
+          authorizer:
+            name: adminJWTAuthorizer
 
   booksGet:
     handler: functions/books-get/handler.main
@@ -70,6 +79,8 @@ functions:
       - httpApi:
           method: GET
           path: /admin/books
+          authorizer:
+            name: adminJWTAuthorizer
 
   booksCreate:
     handler: functions/books-create/handler.main
@@ -79,6 +90,8 @@ functions:
       - httpApi:
           method: POST
           path: /books
+          authorizer:
+            name: adminJWTAuthorizer
 
   booksUpdate:
     handler: functions/books-update/handler.main
@@ -88,6 +101,8 @@ functions:
       - httpApi:
           method: POST
           path: /books/{id}
+          authorizer:
+            name: adminJWTAuthorizer
 
   booksDelete:
     handler: functions/books-delete/handler.main
@@ -97,6 +112,8 @@ functions:
       - httpApi:
           method: DELETE
           path: /books/{id}
+          authorizer:
+            name: adminJWTAuthorizer
 
   booksSeeder:
     handler: functions/books-seeder/handler.main
