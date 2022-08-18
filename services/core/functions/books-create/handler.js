@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function main(event, context) {
   const body = getBody(event);
+  const email = event.requestContext.authorizer.jwt.claims.email;
 
   const bookRepository = new BookRepository();
   const book = await bookRepository.put({
@@ -11,6 +12,7 @@ export async function main(event, context) {
     authorName: body.authorName,
     year: body.year,
     visibility: "Private",
+    addedBy: email,
   });
 
   return {

@@ -90,6 +90,7 @@ export async function main() {
         authorName: book.author,
         year: book.year,
         visibility: "Public",
+        addedBy: "tdavi18@freeuni.edu.ge",
       })
     )
   );
