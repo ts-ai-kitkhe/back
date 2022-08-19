@@ -6,10 +6,11 @@ export async function main(event) {
 
   const bookRepository = new BookRepository();
   const book = await bookRepository.update({
-    Id: bookId,
+    ...(await bookRepository.get({ Id: bookId })),
     title: body.title,
     authorName: body.authorName,
     year: body.year,
+    visibility: body.visibility,
   });
 
   return {
