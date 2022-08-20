@@ -129,6 +129,15 @@ functions:
           method: GET
           path: /authors
 
+  pagesGetAll:
+    handler: functions/pages-get-all/handler.main
+    environment:
+      AWS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
+    events:
+      - httpApi:
+          method: GET
+          path: /admin/books/{id}/pages
+
 resources:
   Resources:
     booksTable:
