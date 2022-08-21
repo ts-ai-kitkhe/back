@@ -45,7 +45,8 @@ def predict_characters(characters, filtered_corners):
         predictions.append(
             (le_name_mapping[letter], confidence, (top_preds, top_confs))
         )
-    return input_for_frontend(filtered_corners, predictions)
+    return filtered_corners, predictions        
+    # return input_for_frontend(filtered_corners, predictions)
 
 
 def extract_bounding_boxes(img):
@@ -110,7 +111,8 @@ def main(event, context):
         characters = get_characters(binary_image, filtered_corners)
 
         print(f"{bucket}/{key}: predict_characters...")
-        res = predict_characters(characters, filtered_corners)
+        filtered_corners, predictions = predict_characters(characters, filtered_corners)
+        res = input_for_frontend(filtered_corners, predictions, width=im.shape[1], height=im.shape[0])
 
         new_key = f"{key.rsplit('.', 1)[0]}.json"
         object = s3.Object(bucket, new_key)
