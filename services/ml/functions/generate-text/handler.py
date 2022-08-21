@@ -1,17 +1,79 @@
+import os
 import statistics
-# from utils.generation import (
-#     filter_boxes_by_models_predictions,
-#     get_all_leters,
-#     project_y_letters,
-#     find_distances_between_coordinates,
-#     get_lines,
-#     get_sorted_lines,
-#     get_text_lines,
-# )
 import json
-
-
+import json
+import boto3
+import pickle
+from transformers import PreTrainedTokenizerFast
 import numpy as np
+
+
+ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
+
+SERVICE_PATH = "functions/generate-text"
+ROBERTA_TOKENS_MAP_PATH = "models/roberta_tokenizer/special_tokens_map.json"
+ROBERTA_CONFIG_PATH = "models/roberta_tokenizer/tokenizer_config.json"
+ROBERTA_TOKENS_MAP_PATH = "models/roberta_tokenizer/tokenizer.json"
+TOKENIZER_PATH = "models/roberta_tokenizer"
+VOCAB_PATH = "models/vocab/light_vocab.pkl"
+
+
+class CandidatesSelector:
+    def __init__(self):
+        vocab_path = os.path.join(SERVICE_PATH, VOCAB_PATH)
+        tokenizer_path = os.path.join(SERVICE_PATH, TOKENIZER_PATH)
+
+        with open(vocab_path, "rb") as handle:
+            self.vocab = pickle.load(handle)
+
+        self.tokenizer = PreTrainedTokenizerFast.from_pretrained(tokenizer_path)
+        self.MAX_LEN = 28
+
+    def choose_best_candidate(self, words):
+        minx = 10000
+        candidates = []
+        for w in words:
+            enc = self.tokenizer(text=w)
+            n_tokens = len(enc["input_ids"])
+            if n_tokens <= minx:
+                minx = n_tokens
+                candidates.append(w)
+
+        if len(candidates) == 0:
+            return ""
+
+        if len(candidates) == 1:
+            return candidates[0]
+        # vocab logic
+        cand_vocab_counts = [(w, self.vocab.get(w, 0)) for w in candidates]
+        best_cand = max(cand_vocab_counts, key=lambda x: x[1])[0]
+        return best_cand
+
+    def select_candidate(self, candidates):
+        best_candidate = self.choose_best_candidate(candidates)
+        return best_candidate
+
+
+candicates_selector = CandidatesSelector()
+
+
+def get_word_variants(word, min_thresh=0.97):
+    word_vars = [""]
+    probs = [1.0]
+    for char_var in word:
+        letters = char_var["top_letters"]
+        confs = char_var["top_confidences"]
+        char_vars = []
+        char_probs = []
+        for l, c in zip(letters, confs):
+            char_vars += [v + l for v in word_vars]
+            char_probs += [p * c for p in probs]
+            if c > min_thresh:
+                break
+        word_vars = char_vars
+        probs = char_probs
+    return word_vars, probs
+
 
 # This class represents a letter object.
 # A letter contains the coordinates and dimensions
@@ -215,6 +277,7 @@ def get_text_lines(result_lines, model_response):
 
     return text_lines
 
+
 def generate_text(model_response, filtered_corners, predictions) -> str:
     f_corners, f_predictions, prediction_mask = filter_boxes_by_models_predictions(
         filtered_corners, predictions, 0.9
@@ -243,34 +306,64 @@ def generate_text(model_response, filtered_corners, predictions) -> str:
         )
         for stl in sorted_text_lines
     ]
-
+    sentences_word_list = []
     result_text = ""
     for i in range(len(sorted_text_lines)):
         sentence = sorted_text_lines[i]
         mean_space = mean_spaces_between_chars[i]
-        sent = ""
+        sent = []
+        word = []
         for i in range(len(sentence) - 1):
-            sent += sentence[i]["letter"]
+            word.append(sentence[i])
             if (
                 abs(sentence[i]["corners"][2][0] - sentence[i + 1]["corners"][0][0])
                 > mean_space
             ):
-                sent += " "
-        sent += sentence[-1]["letter"]
-        result_text += sent + "\n"
+                sent.append(word)
+                word = []
+        word.append(sentence[-1])
+        if word:
+            sent.append(word)
+        sentences_word_list.append(sent)
+
+    text_lines = []
+    for line in sentences_word_list:
+        sentence = []
+        for word in line:
+            w, p = get_word_variants(word)
+            #         top_words = [w[i] for i in (-np.array(p)).argsort()[:int(np.sqrt(len(w)))]]
+            best_word = candicates_selector.select_candidate(w)
+            sentence.append(best_word)
+        text_lines.append(sentence)
+
+    result_text = "\n".join([" ".join(l) for l in text_lines])
 
     return result_text
 
 
+s3 = boto3.resource("s3")
+
+
 def main(event, context):
-    model_response = []
-    filtered_corners, predictions = [], []
-    # result_text = generate_text(model_response, filtered_corners, predictions)
-    # print(result_text)
 
-    body = {
-        "message": "generate text",
-        "input": event,
-    }
+    for e in event["Records"]:
+        bucket = e["s3"]["bucket"]["name"]
+        key = e["s3"]["object"]["key"]
+        print(f"{bucket}/{key}: init...")
+        file_extension = key.rsplit(".", 1)[-1]
+        if file_extension not in ["json"]:
+            print(file_extension, " continuing...")
+            continue
+        obj = s3.Object(bucket, key)
+        data = json.loads(obj.get()["Body"].read())
+        model_response = data.get("data")
+        filtered_corners = [m["corners"] for m in model_response]
+        predictions = [(m["letter"], m["confidence"]) for m in model_response]
+        result_text = generate_text(model_response, filtered_corners, predictions)
+        # print(json.loads(obj.get()["Body"].read()))
+        # break
+        new_key = f"{key.rsplit('.', 1)[0]}.txt"
+        object = s3.Object(ml_bucket_name, new_key)
 
-    return {"statusCode": 200, "body": json.dumps(body)}
+        print(f"{ml_bucket_name}/{new_key}: saving...")
+        object.put(Body=result_text)

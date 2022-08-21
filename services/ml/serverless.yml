@@ -39,3 +39,5 @@ functions:
 
   generateText:
     handler: functions.generate-text.handler.main
+    environment:
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}

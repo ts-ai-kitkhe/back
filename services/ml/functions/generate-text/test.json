@@ -1,0 +1,34 @@
+{
+    "Records": [
+        {
+            "s3": {
+                "bucket": {
+                    "name": "ml.ts-ai-kitkhe.ge"
+                },
+                "object": {
+                    "key": "books/bb9d864d-115a-48a2-83c7-5a93582e5562/pages/0001.json"
+                }
+            }
+        },
+        {
+            "s3": {
+                "bucket": {
+                    "name": "ml.ts-ai-kitkhe.ge"
+                },
+                "object": {
+                    "key": "books/bb9d864d-115a-48a2-83c7-5a93582e5562/pages/0002.json"
+                }
+            }
+        },
+        {
+            "s3": {
+                "bucket": {
+                    "name": "ml.ts-ai-kitkhe.ge"
+                },
+                "object": {
+                    "key": "books/bb9d864d-115a-48a2-83c7-5a93582e5562/pages/0003.json"
+                }
+            }
+        }
+    ]
+}
