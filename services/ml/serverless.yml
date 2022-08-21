@@ -1,5 +1,9 @@
 service: ml
 
+custom:
+  # S3
+  S3_ML_BUCKET_NAME: ml.ts-ai-kitkhe.ge
+
 provider:
   name: aws
   region: eu-central-1
@@ -15,12 +19,14 @@ provider:
       statements:
         - Effect: "Allow"
           Resource:
-            - "arn:aws:s3:::assets.ts-ai-kitkhe.ge/*"
+            - "arn:aws:s3:::${self:custom.S3_ML_BUCKET_NAME}/*"
           Action: "s3:*"
 
 functions:
   hello:
     handler: functions.hello-world.handler.hello
+    environment:
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
 
   processImage:
     image: s3ImageProcessor

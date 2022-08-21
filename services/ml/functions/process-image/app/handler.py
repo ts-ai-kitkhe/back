@@ -1,6 +1,7 @@
 import cv2
 import json
 import boto3
+import os
 import numpy as np
 from tensorflow import keras
 from sklearn.preprocessing import LabelEncoder
@@ -19,6 +20,7 @@ from utils.preprocessing import (
 )
 
 s3 = boto3.resource("s3")
+ml_bucket_name = os.environ['S3_ML_BUCKET_NAME']
 
 model_name = "models/first_cnn/first_cnn.h5"
 label_encoder_name = "models/first_cnn/first_cnn_label_encoder.npy"
@@ -115,9 +117,9 @@ def main(event, context):
         res = input_for_frontend(filtered_corners, predictions, width=im.shape[1], height=im.shape[0])
 
         new_key = f"{key.rsplit('.', 1)[0]}.json"
-        object = s3.Object(bucket, new_key)
+        object = s3.Object(ml_bucket_name, new_key)
 
-        print(f"{bucket}/{new_key}: saving...")
+        print(f"{ml_bucket_name}/{new_key}: saving...")
         object.put(Body=json.dumps(res))
 
-        print(f"{bucket}/{key}: finish")
+        print(f"{ml_bucket_name}/{key}: finish")
