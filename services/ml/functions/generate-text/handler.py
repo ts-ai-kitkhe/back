@@ -360,9 +360,6 @@ def main(event, context):
 
     if bucket != ml_bucket_name:
         return
-    # if file_extension not in ["json"]:
-    #     print(file_extension, " continuing...")
-    #     return
 
     obj = s3.Object(bucket, key)
     data = json.loads(obj.get()["Body"].read())
@@ -376,4 +373,4 @@ def main(event, context):
     object = s3.Object(ml_bucket_name, new_key)
 
     print(f"{ml_bucket_name}/{new_key}: saving...")
-    object.put(Body=result_text)
+    object.put(Body=result_text, ContentType='text/plain; charset=utf-8')
