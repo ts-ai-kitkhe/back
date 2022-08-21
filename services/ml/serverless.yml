@@ -68,5 +68,12 @@ functions:
                 key:
                   - prefix: 'books/'
 
+  predictionsUpdate:
+    handler: functions.predictions-update.handler.main
+    events:
+      - httpApi:
+          method: post
+          path: /book/{bookId}/pages/{pageId}/predictions
+
 plugins:
   - serverless-python-requirements
