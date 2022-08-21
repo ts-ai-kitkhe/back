@@ -41,5 +41,23 @@ functions:
 
   generateText:
     handler: functions.generate-text.handler.main
+    timeout: 90
     environment:
       S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
+    events:
+      - eventBridge:
+          pattern:
+            source:
+              - aws.s3
+            detail-type:
+              - Object Created
+            detail:
+              bucket:
+                name:
+                  - ${self:custom.S3_ML_BUCKET_NAME}
+              object:
+                key:
+                  - prefix: 'books/'
+
+plugins:
+  - serverless-python-requirements

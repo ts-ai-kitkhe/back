@@ -6,7 +6,7 @@ import boto3
 import pickle
 from transformers import PreTrainedTokenizerFast
 import numpy as np
-
+import re
 
 ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
 
@@ -347,25 +347,31 @@ s3 = boto3.resource("s3")
 
 
 def main(event, context):
+    d = event.get("detail")
+    b = d.get("bucket")
+    bucket = b.get("name")
+    o = d.get("object")
+    key = o.get("key")
+    print(event)
+    print(f"{bucket}/{key}: init...")
+    if not re.match(re.compile(r'\bbooks/.*/pages/.*\.json\b'), key):
+        return
 
-    for e in event["Records"]:
-        bucket = e["s3"]["bucket"]["name"]
-        key = e["s3"]["object"]["key"]
-        print(f"{bucket}/{key}: init...")
-        file_extension = key.rsplit(".", 1)[-1]
-        if file_extension not in ["json"]:
-            print(file_extension, " continuing...")
-            continue
+    if bucket != ml_bucket_name:
+        return
+    # if file_extension not in ["json"]:
+    #     print(file_extension, " continuing...")
+    #     return
 
-        obj = s3.Object(bucket, key)
-        data = json.loads(obj.get()["Body"].read())
-        model_response = data.get("data")
-        filtered_corners = [m.get("corners") for m in model_response]
-        predictions = [(m.get("letter"), m.get("confidence")) for m in model_response]
-        result_text = generate_text(model_response, filtered_corners, predictions)
+    obj = s3.Object(bucket, key)
+    data = json.loads(obj.get()["Body"].read())
+    model_response = data.get("data")
+    filtered_corners = [m.get("corners") for m in model_response]
+    predictions = [(m.get("letter"), m.get("confidence")) for m in model_response]
+    result_text = generate_text(model_response, filtered_corners, predictions)
 
-        new_key = f"{key.rsplit('.', 1)[0]}.txt"
-        object = s3.Object(ml_bucket_name, new_key)
+    new_key = f"{key.rsplit('.', 1)[0]}.txt"
+    object = s3.Object(ml_bucket_name, new_key)
 
-        print(f"{ml_bucket_name}/{new_key}: saving...")
-        object.put(Body=result_text)
+    print(f"{ml_bucket_name}/{new_key}: saving...")
+    object.put(Body=result_text)

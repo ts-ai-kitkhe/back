@@ -1,34 +1,28 @@
 {
-    "Records": [
-        {
-            "s3": {
-                "bucket": {
-                    "name": "ml.ts-ai-kitkhe.ge"
-                },
-                "object": {
-                    "key": "books/bb9d864d-115a-48a2-83c7-5a93582e5562/pages/0001.json"
-                }
-            }
+    "version": "0",
+    "id": "f09f9166-627a-4816-a1fd-60e389c2f5af",
+    "detail-type": "Object Created",
+    "source": "aws.s3",
+    "account": "788230498458",
+    "time": "2022-08-21T16:20:19Z",
+    "region": "eu-central-1",
+    "resources": [
+        "arn:aws:s3:::ml.ts-ai-kitkhe.ge"
+    ],
+    "detail": {
+        "version": "0",
+        "bucket": {
+            "name": "ml.ts-ai-kitkhe.ge"
         },
-        {
-            "s3": {
-                "bucket": {
-                    "name": "ml.ts-ai-kitkhe.ge"
-                },
-                "object": {
-                    "key": "books/bb9d864d-115a-48a2-83c7-5a93582e5562/pages/0002.json"
-                }
-            }
+        "object": {
+            "key": "books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/0002.json",
+            "size": 366284,
+            "etag": "2c138ea814639d0a19a246549007cb93",
+            "sequencer": "0063025B43842F3950"
         },
-        {
-            "s3": {
-                "bucket": {
-                    "name": "ml.ts-ai-kitkhe.ge"
-                },
-                "object": {
-                    "key": "books/bb9d864d-115a-48a2-83c7-5a93582e5562/pages/0003.json"
-                }
-            }
-        }
-    ]
+        "request-id": "6ERRP0F7MW81DTHY",
+        "requester": "788230498458",
+        "source-ip-address": "3.68.229.102",
+        "reason": "PutObject"
+    }
 }
