@@ -57,7 +57,7 @@ class CandidatesSelector:
 candicates_selector = CandidatesSelector()
 
 
-def get_word_variants(word, min_thresh=0.97):
+def get_word_variants(word, min_thresh=0.95):
     word_vars = [""]
     probs = [1.0]
     for char_var in word:
@@ -279,6 +279,9 @@ def get_text_lines(result_lines, model_response):
 
 
 def generate_text(model_response, filtered_corners, predictions) -> str:
+    if len(model_response) == 0 or len(filtered_corners) == 0 or len(predictions) == 0:
+        return ""
+
     f_corners, f_predictions, prediction_mask = filter_boxes_by_models_predictions(
         filtered_corners, predictions, 0.9
     )
@@ -331,7 +334,6 @@ def generate_text(model_response, filtered_corners, predictions) -> str:
         sentence = []
         for word in line:
             w, p = get_word_variants(word)
-            #         top_words = [w[i] for i in (-np.array(p)).argsort()[:int(np.sqrt(len(w)))]]
             best_word = candicates_selector.select_candidate(w)
             sentence.append(best_word)
         text_lines.append(sentence)
@@ -354,14 +356,14 @@ def main(event, context):
         if file_extension not in ["json"]:
             print(file_extension, " continuing...")
             continue
+
         obj = s3.Object(bucket, key)
         data = json.loads(obj.get()["Body"].read())
         model_response = data.get("data")
-        filtered_corners = [m["corners"] for m in model_response]
-        predictions = [(m["letter"], m["confidence"]) for m in model_response]
+        filtered_corners = [m.get("corners") for m in model_response]
+        predictions = [(m.get("letter"), m.get("confidence")) for m in model_response]
         result_text = generate_text(model_response, filtered_corners, predictions)
-        # print(json.loads(obj.get()["Body"].read()))
-        # break
+
         new_key = f"{key.rsplit('.', 1)[0]}.txt"
         object = s3.Object(ml_bucket_name, new_key)
 
