@@ -272,44 +272,58 @@ def filter_by_sides(
 
 
 def input_for_frontend(
-    corners: List[List[int]], predictions: List[Tuple[str, float]], json_path: str = ""
+    corners: List[List[int]], predictions: List[Tuple[str, float]], width: int, height: int
 ) -> List[Dict[str, Any]]:
     """
     function generates json on the given path for frontend usage, each corner having its id as string.
-    example: [{"id": 0, "letter": "ა",
-               "confidence": 0.99,
-               "corners": [[0, 1],[0, 3],[2, 0],[1, 0]],
-               "top_letters": ["ა", "ბ", "გ"],
-               "top_confidences": [0.3, 0.2, 0.1]]
-               }]
+    example: {  "shape": {"width": 100, "height": 200},
+                "data": 
+                [{"id": 0, "letter": "ა",
+                "confidence": 0.99,
+                "corners": [[0, 1],[0, 3],[2, 0],[1, 0]],
+                "top_letters": ["ა", "ბ", "გ"],
+                "top_confidences": [0.3, 0.2, 0.1]]
+                }]
+                }
 
     Parameters
     -----
     corners: list of list of ints
     predictions: list of Tuples of str and float
-    json_path: str
 
     Returns
     -----
     None
     """
-    import json
 
     # assert len(corners) == len(predictions)
-    model_response = [
-        {
-            "id": i,
-            "letter": predictions[i][0],
-            "confidence": float(predictions[i][1]),
-            "corners": corners[i],
-            "top_letters": predictions[i][2][0],
-            "top_confidences": [float(p) for p in predictions[i][2][1]],
-        }
-        for i in range(len(corners))
-    ]
+    
+    model_response = {
+        "shape": {"width": width, "height": height}, 
+        "data": [
+            {
+                "id": i,
+                "letter": predictions[i][0],
+                "confidence": float(predictions[i][1]),
+                "corners": corners[i],
+                "top_letters": predictions[i][2][0],
+                "top_confidences": [float(p) for p in predictions[i][2][1]],
+            }
+            for i in range(len(corners))
+        ]
+    }
+    # model_response = [
+    #     {
+    #         "id": i,
+    #         "letter": predictions[i][0],
+    #         "confidence": float(predictions[i][1]),
+    #         "corners": corners[i],
+    #         "top_letters": predictions[i][2][0],
+    #         "top_confidences": [float(p) for p in predictions[i][2][1]],
+    #     }
+    #     for i in range(len(corners))
+    # ]
 
-    # with open(json_path, "w", encoding="utf8") as f:
-    #     json.dump(model_response, f, ensure_ascii=False)
     return model_response
 
 
