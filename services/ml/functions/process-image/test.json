@@ -1,38 +1,28 @@
 {
-    "Records": [
-        {
-            "eventVersion": "2.1",
-            "eventSource": "aws:s3",
-            "awsRegion": "eu-central-1",
-            "eventTime": "2022-07-31T14:05:36.515Z",
-            "eventName": "ObjectCreated:Put",
-            "userIdentity": {
-                "principalId": "AWS:AROA3PBRS5CNHR5IA2O2A:s3-assets-get-pre-signed-url"
-            },
-            "requestParameters": {
-                "sourceIPAddress": "217.147.224.170"
-            },
-            "responseElements": {
-                "x-amz-request-id": "KK2FFDV1F3Y7QRX4",
-                "x-amz-id-2": "Z/xDasbinJTqkaOsXC7lD4C5/syLTxpaTrQv/0M9qcBqq8qW5Gpj0j/jMDzjkIHkJ4ZfdNfzrOm/4juZhuc0DChq2jcBpyht"
-            },
-            "s3": {
-                "s3SchemaVersion": "1.0",
-                "configurationId": "ml-dev-processImage-68a737133cefb25bff959852b8f04754",
-                "bucket": {
-                    "name": "assets.ts-ai-kitkhe.ge",
-                    "ownerIdentity": {
-                        "principalId": "AUO8B1F6RM777"
-                    },
-                    "arn": "arn:aws:s3:::assets.ts-ai-kitkhe.ge"
-                },
-                "object": {
-                    "key": "0002.jpg",
-                    "size": 140451,
-                    "eTag": "1454e3f28f2d8dc1977e7b29da5e1fa0",
-                    "sequencer": "0062E68C306EAD55BA"
-                }
-            }
-        }
-    ]
+    "version": "0",
+    "id": "f09f9166-627a-4816-a1fd-60e389c2f5af",
+    "detail-type": "Object Created",
+    "source": "aws.s3",
+    "account": "788230498458",
+    "time": "2022-08-21T16:20:19Z",
+    "region": "eu-central-1",
+    "resources": [
+        "arn:aws:s3:::assets.ts-ai-kitkhe.ge"
+    ],
+    "detail": {
+        "version": "0",
+        "bucket": {
+            "name": "assets.ts-ai-kitkhe.ge"
+        },
+        "object": {
+            "key": "books/b342091a-b15b-4c9a-b3b2-2b9dacca6fe6/pages/0002.jpg",
+            "size": 366284,
+            "etag": "2c138ea814639d0a19a246549007cb93",
+            "sequencer": "0063025B43842F3950"
+        },
+        "request-id": "6ERRP0F7MW81DTHY",
+        "requester": "788230498458",
+        "source-ip-address": "3.68.229.102",
+        "reason": "PutObject"
+    }
 }

@@ -34,10 +34,19 @@ functions:
     environment:
       S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
     events:
-      - s3:
-          bucket: assets.ts-ai-kitkhe.ge
-          event: s3:ObjectCreated:*
-          existing: true
+      - eventBridge:
+          pattern:
+            source:
+              - aws.s3
+            detail-type:
+              - Object Created
+            detail:
+              bucket:
+                name:
+                  - ${self:custom.S3_ASSETS_BUCKET_NAME}
+              object:
+                key:
+                  - prefix: 'books/'
 
   generateText:
     handler: functions.generate-text.handler.main

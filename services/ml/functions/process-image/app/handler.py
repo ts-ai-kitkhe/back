@@ -1,3 +1,4 @@
+import re
 import cv2
 import json
 import boto3
@@ -20,7 +21,7 @@ from utils.preprocessing import (
 )
 
 s3 = boto3.resource("s3")
-ml_bucket_name = os.environ['S3_ML_BUCKET_NAME']
+ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
 
 model_name = "models/first_cnn/first_cnn.h5"
 label_encoder_name = "models/first_cnn/first_cnn_label_encoder.npy"
@@ -47,7 +48,7 @@ def predict_characters(characters, filtered_corners):
         predictions.append(
             (le_name_mapping[letter], confidence, (top_preds, top_confs))
         )
-    return filtered_corners, predictions        
+    return filtered_corners, predictions
     # return input_for_frontend(filtered_corners, predictions)
 
 
@@ -88,38 +89,41 @@ def extract_bounding_boxes(img):
 
 
 def main(event, context):
-    for e in event["Records"]:
-        bucket = e["s3"]["bucket"]["name"]
-        key = e["s3"]["object"]["key"]
-        print(f"{bucket}/{key}: init...")
+    d = event.get("detail")
+    b = d.get("bucket")
+    bucket = b.get("name")
+    o = d.get("object")
+    key = o.get("key")
 
-        file_extension = key.rsplit(".", 1)[-1]
-        if file_extension not in ["jpg", "png", "jpeg", "webp"]:
-            print(file_extension, " continuing...")
-            continue
+    print(f"{bucket}/{key}: init...")
 
-        obj = s3.Object(bucket, key)
+    if not re.match(re.compile(r"\bbooks/.*/pages/.*\.(jpg|png|jpeg|webp)\b"), key):
+        return
 
-        img_array = np.asarray(bytearray(obj.get()["Body"].read()), dtype=np.uint8)
-        print(f"{bucket}/{key}: img_array.shape={img_array.shape}")
+    obj = s3.Object(bucket, key)
 
-        im = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
-        print(f"{bucket}/{key}: im.shape={im.shape}")
+    img_array = np.asarray(bytearray(obj.get()["Body"].read()), dtype=np.uint8)
+    print(f"{bucket}/{key}: img_array.shape={img_array.shape}")
 
-        print(f"{bucket}/{key}: extract_bounding_boxes...")
-        binary_image, filtered_corners = extract_bounding_boxes(im)
+    im = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
+    print(f"{bucket}/{key}: im.shape={im.shape}")
 
-        print(f"{bucket}/{key}: get_characters...")
-        characters = get_characters(binary_image, filtered_corners)
+    print(f"{bucket}/{key}: extract_bounding_boxes...")
+    binary_image, filtered_corners = extract_bounding_boxes(im)
 
-        print(f"{bucket}/{key}: predict_characters...")
-        filtered_corners, predictions = predict_characters(characters, filtered_corners)
-        res = input_for_frontend(filtered_corners, predictions, width=im.shape[1], height=im.shape[0])
+    print(f"{bucket}/{key}: get_characters...")
+    characters = get_characters(binary_image, filtered_corners)
 
-        new_key = f"{key.rsplit('.', 1)[0]}.json"
-        object = s3.Object(ml_bucket_name, new_key)
+    print(f"{bucket}/{key}: predict_characters...")
+    filtered_corners, predictions = predict_characters(characters, filtered_corners)
+    res = input_for_frontend(
+        filtered_corners, predictions, width=im.shape[1], height=im.shape[0]
+    )
 
-        print(f"{ml_bucket_name}/{new_key}: saving...")
-        object.put(Body=json.dumps(res))
+    new_key = f"{key.rsplit('.', 1)[0]}.json"
+    object = s3.Object(ml_bucket_name, new_key)
 
-        print(f"{ml_bucket_name}/{key}: finish")
+    print(f"{ml_bucket_name}/{new_key}: saving...")
+    object.put(Body=json.dumps(res), ContentType="application/json")
+
+    print(f"{ml_bucket_name}/{key}: finish")
