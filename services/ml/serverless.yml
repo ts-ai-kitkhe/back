@@ -25,12 +25,12 @@ provider:
 functions:
   hello:
     handler: functions.hello-world.handler.hello
-    environment:
-      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
 
   processImage:
     image: s3ImageProcessor
     timeout: 900
+    environment:
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
     events:
       - s3:
           bucket: assets.ts-ai-kitkhe.ge
