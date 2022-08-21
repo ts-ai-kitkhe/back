@@ -7,4 +7,5 @@ export class Book extends BaseModel {
   year;
   visibility;
   addedBy;
+  coverImagePath;
 }

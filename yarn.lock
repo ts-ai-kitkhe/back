@@ -7333,6 +7333,11 @@ parse-json@^5.0.0:
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
 
+parse-multipart-data@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/parse-multipart-data/-/parse-multipart-data-1.4.0.tgz#864c93b7cb2675bb4e5e69c956de7a42b8ab0910"
+  integrity sha512-CoF9FXHi6ICz/VFPjunENhVtT8yKi9FtkkmDqCbjyJ2R2GSYZys56e+DiueFFdncWyvttQz1yUxVcXiRvGEPiA==
+
 parse5@6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-6.0.1.tgz#e1a1c085c569b3dc08321184f19a39cc27f7c30b"

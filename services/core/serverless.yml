@@ -33,6 +33,7 @@ provider:
 custom:
   # Dynamo DBs
   DYNAMO_DB_BOOKS_TABLE_NAME: books
+  S3_ASSETS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
   # Plugins
   bundle:
     sourcemaps: false # Enable source maps
@@ -97,6 +98,7 @@ functions:
     handler: functions/books-update/handler.main
     environment:
       DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+      S3_ASSETS_BUCKET_NAME: ${self:custom.S3_ASSETS_BUCKET_NAME}
     events:
       - httpApi:
           method: POST
