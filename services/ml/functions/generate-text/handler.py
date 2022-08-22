@@ -308,6 +308,7 @@ def generate_text(model_response, filtered_corners, predictions) -> str:
                 for i in range(len(stl) - 1)
             ]
         )
+        if len(stl) > 1 else 0
         for stl in sorted_text_lines
     ]
     sentences_word_list = []
@@ -325,7 +326,8 @@ def generate_text(model_response, filtered_corners, predictions) -> str:
             ):
                 sent.append(word)
                 word = []
-        word.append(sentence[-1])
+        if sentence != []:        
+            word.append(sentence[-1])
         if word:
             sent.append(word)
         sentences_word_list.append(sent)
@@ -356,9 +358,11 @@ def main(event, context):
     key = o.get("key")
     print(f"{bucket}/{key}: init...")
     if not re.match(re.compile(r'\bbooks/.*/pages/.*\.json\b'), key):
+        print("File:", key)
         return
 
     if bucket != ml_bucket_name:
+        print(bucket)
         return
 
     obj = s3.Object(bucket, key)
