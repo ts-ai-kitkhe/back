@@ -139,6 +139,19 @@ functions:
       - httpApi:
           method: GET
           path: /admin/books/{id}/pages
+          authorizer:
+            name: adminJWTAuthorizer
+
+  pagesDelete:
+    handler: functions/pages-delete/handler.main
+    environment:
+      AWS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
+    events:
+      - httpApi:
+          method: DELETE
+          path: /admin/books/{id}/pages/{filename}
+          authorizer:
+            name: adminJWTAuthorizer
 
 resources:
   Resources:
