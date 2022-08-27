@@ -33,6 +33,7 @@ provider:
 custom:
   # Dynamo DBs
   DYNAMO_DB_BOOKS_TABLE_NAME: books
+  DYNAMO_DB_PAGES_TABLE_NAME: pages
   S3_ASSETS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
   # Plugins
   bundle:
@@ -164,6 +165,17 @@ resources:
             AttributeType: S
         KeySchema:
           - AttributeName: Id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    pagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.DYNAMO_DB_PAGES_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: bookId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: bookId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
