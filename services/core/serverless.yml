@@ -167,6 +167,20 @@ functions:
           authorizer:
             name: adminJWTAuthorizer
 
+  pagesTableStream:
+    handler: functions/pages-table-stream/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+      DYNAMO_DB_PAGES_TABLE_NAME: ${self:custom.DYNAMO_DB_PAGES_TABLE_NAME}
+      S3_ASSETS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
+      AWS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt: [pagesTable, StreamArn]
+          maximumRetryAttempts: 2
+
 resources:
   Resources:
     booksTable:
@@ -191,6 +205,8 @@ resources:
           - AttributeName: bookId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
 
 plugins:
   - serverless-bundle
