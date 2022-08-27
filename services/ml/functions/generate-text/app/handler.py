@@ -374,7 +374,7 @@ def main(event, context):
     result_text = generate_text(model_response, filtered_corners, predictions)
 
     new_key = f"{key.rsplit('.', 1)[0]}.txt"
-    new_key = f'{TXT_FOLDER_PATH}'.join(new_key.rsplit('/', 1))
+    new_key = f'{TXT_FOLDER_PATH}'.join([new_key.rsplit('/', 2)[0]] + [new_key.rsplit('/', 2)[2]])
     object = s3.Object(ml_bucket_name, new_key)
 
     print(f"{ml_bucket_name}/{new_key}: saving...")
