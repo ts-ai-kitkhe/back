@@ -1,14 +1,6 @@
 import { BaseModel } from "./base-model";
 
 export class Book extends BaseModel {
-  Id;
-  title;
-  authorName;
-  year;
-  visibility;
-  addedBy;
-  coverImagePath;
-
   get coverImageUrl() {
     return this.coverImagePath
       ? `https://assets.ts-ai-kitkhe.ge/${this.coverImagePath}`

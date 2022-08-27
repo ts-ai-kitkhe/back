@@ -1,9 +1,8 @@
 import * as AWS from "aws-sdk";
+CREATED_AT_FIELD_NAME = "createdAt";
+UPDATED_AT_FIELD_NAME = "updatedAt";
 
 export default class DynamoDBRepository {
-  CREATED_AT_FIELD_NAME = "createdAt";
-  UPDATED_AT_FIELD_NAME = "updatedAt";
-
   constructor(tableName, Cls) {
     if (!tableName) {
       throw new Error("tableName not defined in env");
@@ -28,8 +27,8 @@ export default class DynamoDBRepository {
     const now = new Date();
     item = {
       ...item,
-      [this.UPDATED_AT_FIELD_NAME]: now.getTime(),
-      [this.CREATED_AT_FIELD_NAME]: now.getTime(),
+      [UPDATED_AT_FIELD_NAME]: now.getTime(),
+      [CREATED_AT_FIELD_NAME]: now.getTime(),
     };
     await this.client
       .put({
@@ -45,7 +44,7 @@ export default class DynamoDBRepository {
     const now = new Date();
     item = {
       ...item,
-      [this.UPDATED_AT_FIELD_NAME]: now.getTime(),
+      [UPDATED_AT_FIELD_NAME]: now.getTime(),
     };
     await this.client
       .put({

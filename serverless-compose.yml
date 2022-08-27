@@ -1,6 +1,6 @@
 services:
   core:
     path: services/core
-  
+
   ml:
     path: services/ml

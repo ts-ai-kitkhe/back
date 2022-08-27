@@ -1,9 +1,6 @@
 import { BaseModel } from "./base-model";
 
 export class BookPages extends BaseModel {
-  bookId;
-  pages;
-
   toJSON() {
     return {
       ...super.toJSON(),
