@@ -19,6 +19,7 @@ from utils.preprocessing import (
     input_for_frontend,
     get_bounding_boxes,
 )
+JSON_FOLDER_PATH = '/predictions/'
 
 s3 = boto3.resource("s3")
 ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
@@ -119,8 +120,8 @@ def main(event, context):
     res = input_for_frontend(
         filtered_corners, predictions, width=im.shape[1], height=im.shape[0]
     )
-
     new_key = f"{key.rsplit('.', 1)[0]}.json"
+    new_key = f'{JSON_FOLDER_PATH}'.join(new_key.rsplit('/'))
     object = s3.Object(ml_bucket_name, new_key)
 
     print(f"{ml_bucket_name}/{new_key}: saving...")
