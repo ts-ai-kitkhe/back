@@ -102,7 +102,7 @@ functions:
       S3_ASSETS_BUCKET_NAME: ${self:custom.S3_ASSETS_BUCKET_NAME}
     events:
       - httpApi:
-          method: POST
+          method: PATCH
           path: /books/{id}
           authorizer:
             name: adminJWTAuthorizer
@@ -151,6 +151,17 @@ functions:
       - httpApi:
           method: DELETE
           path: /admin/books/{id}/pages/{filename}
+          authorizer:
+            name: adminJWTAuthorizer
+
+  pagesUpdate:
+    handler: functions/pages-update/handler.main
+    environment:
+      DYNAMO_DB_PAGES_TABLE_NAME: ${self:custom.DYNAMO_DB_PAGES_TABLE_NAME}
+    events:
+      - httpApi:
+          method: PATCH
+          path: /admin/books/{id}/pages
           authorizer:
             name: adminJWTAuthorizer
 

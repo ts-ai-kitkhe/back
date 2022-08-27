@@ -46,7 +46,7 @@ export async function main(event) {
   });
 
   return {
-    statusCode: 201,
+    statusCode: 200,
     body: JSON.stringify(book),
   };
 }
