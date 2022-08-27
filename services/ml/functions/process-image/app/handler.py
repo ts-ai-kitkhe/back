@@ -121,7 +121,7 @@ def main(event, context):
         filtered_corners, predictions, width=im.shape[1], height=im.shape[0]
     )
     new_key = f"{key.rsplit('.', 1)[0]}.json"
-    new_key = f'{JSON_FOLDER_PATH}'.join(new_key.rsplit('/'))
+    new_key = f'{JSON_FOLDER_PATH}'.join(new_key.rsplit('/', 1))
     object = s3.Object(ml_bucket_name, new_key)
 
     print(f"{ml_bucket_name}/{new_key}: saving...")
