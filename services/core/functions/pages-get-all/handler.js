@@ -8,6 +8,12 @@ export async function main(event) {
   const bookId = event.pathParameters.id;
   const bookPagesRepository = new BookPagesRepository();
   const bookPages = await bookPagesRepository.get({ bookId: bookId });
+  if (!bookPages || !bookPages.pages) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify([]),
+    };
+  }
 
   const prefix = `books/${bookId}/pages/`;
   var params = {
@@ -16,6 +22,13 @@ export async function main(event) {
   };
 
   const s3ListObjectsResult = await s3.listObjectsV2(params).promise();
+  if (!s3ListObjectsResult.Contents) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify([]),
+    };
+  }
+
   const s3ObjectKeys = s3ListObjectsResult.Contents.map((elem) => elem.Key);
   const pagesWithPrefix = bookPages.pages.map((page) => `${prefix}${page}`);
   const filteredPages = pagesWithPrefix.filter((page) =>
