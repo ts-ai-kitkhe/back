@@ -1,7 +1,7 @@
 import { BookRepository, getBody } from "../../libs";
 import { v4 as uuidv4 } from "uuid";
 
-export async function main(event, context) {
+export async function main(event) {
   const body = getBody(event);
   const email = event.requestContext.authorizer.jwt.claims.email;
 

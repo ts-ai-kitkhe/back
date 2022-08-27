@@ -28,6 +28,7 @@ provider:
         - Effect: "Allow"
           Resource:
             - Fn::GetAtt: [booksTable, Arn]
+            - Fn::GetAtt: [pagesTable, Arn]
           Action: "dynamodb:*"
 
 custom:
