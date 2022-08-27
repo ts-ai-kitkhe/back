@@ -9,6 +9,8 @@ from transformers import PreTrainedTokenizerFast
 import numpy as np
 
 
+
+TXT_FOLDER_PATH = '/text/'
 ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
 
 SERVICE_PATH = "functions/generate-text"
@@ -374,6 +376,7 @@ def main(event, context):
     result_text = generate_text(model_response, filtered_corners, predictions)
 
     new_key = f"{key.rsplit('.', 1)[0]}.txt"
+    new_key = f'{TXT_FOLDER_PATH}'.join(new_key.rsplit('/'))
     object = s3.Object(ml_bucket_name, new_key)
 
     print(f"{ml_bucket_name}/{new_key}: saving...")
