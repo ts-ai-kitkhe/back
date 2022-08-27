@@ -1,0 +1,49 @@
+{
+  "Records": [
+    {
+      "eventID": "85d67e032cb7c7d643264d18f240c486",
+      "eventName": "MODIFY",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "eu-central-1",
+      "dynamodb": {
+        "NewImage": {
+          "bookId": {
+            "S": "33c08aaf-e375-41cd-a25f-918317e8b164"
+          },
+          "createdAt": {
+            "N": "1661629761459"
+          },
+          "pages": {
+            "L": [
+              {
+                "S": "0001.jpg"
+              },
+              {
+                "S": "0002.jpg"
+              },
+              {
+                "S": "0003.jpg"
+              },
+              {
+                "S": "0004.jpg"
+              },
+              {
+                "S": "0005.jpg"
+              },
+              {
+                "S": "0006.jpg"
+              }
+            ]
+          },
+          "updatedAt": {
+            "N": "1661629761459"
+          }
+        },
+        "SequenceNumber": "825400000000029559111698",
+        "SizeBytes": 171,
+        "StreamViewType": "NEW_IMAGE"
+      }
+    }
+  ]
+}

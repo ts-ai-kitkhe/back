@@ -43,6 +43,12 @@ custom:
     caching: false # Enable Webpack caching
     concurrency: 2 # Set desired concurrency, defaults to the number of available cores
     packager: yarn # Specify a packager, 'npm' or 'yarn'. Defaults to 'npm'.
+    forceInclude:
+      - pdfkit
+    rawFileExtensions:
+      - afm
+    externals:
+      - pdfkit
 
 functions:
   getSignedUrl:
