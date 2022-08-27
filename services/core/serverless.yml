@@ -137,6 +137,7 @@ functions:
     handler: functions/pages-get-all/handler.main
     environment:
       AWS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
+      DYNAMO_DB_PAGES_TABLE_NAME: ${self:custom.DYNAMO_DB_PAGES_TABLE_NAME}
     events:
       - httpApi:
           method: GET
