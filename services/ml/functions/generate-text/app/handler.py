@@ -2,7 +2,6 @@ import re
 import os
 import statistics
 import json
-import json
 import boto3
 import pickle
 from transformers import PreTrainedTokenizerFast

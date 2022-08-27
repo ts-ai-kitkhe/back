@@ -387,13 +387,22 @@ def zero_padding(
 
     elif binary_image.shape[1] > desired_shape[1]:
         scale = desired_shape[1] / binary_image.shape[1]
-    print("CHARACTER SHAPE", binary_image.shape)
-    print("SCALE: ", scale)
+
     width = int(binary_image.shape[1] * scale)
     height = int(binary_image.shape[0] * scale)
     dim = (width, height)
-    print("RESIZE DIMENSION: ", dim)
-    resized = cv2.resize(binary_image, dim)
+    try:
+        resized = cv2.resize(binary_image, dim)
+    except:
+        print("CHARACTER SHAPE", binary_image.shape)
+        print("SCALE: ", scale)     
+        print("RESIZE DIMENSION: ", dim)
+        scale = 1
+        width = int(binary_image.shape[1] * scale)
+        height = int(binary_image.shape[0] * scale)
+        dim = (width, height)
+        resized = cv2.resize(binary_image, dim)
+
     pad = np.full(desired_shape, np.uint8(pad_value))
     # if curr shape < desired shape -> zero padding
     if (
