@@ -1,44 +1,13 @@
-import { BookPagesRepository } from "../../libs";
-
-var AWS = require("aws-sdk");
-var s3 = new AWS.S3();
-var bucketName = process.env.AWS_BUCKET_NAME;
+import { getBookPagesByOrder } from "../../libs";
 
 export async function main(event) {
   const bookId = event.pathParameters.id;
-  const bookPagesRepository = new BookPagesRepository();
-  const bookPages = await bookPagesRepository.get({ bookId: bookId });
-  if (!bookPages || !bookPages.pages) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify([]),
-    };
-  }
-
-  const prefix = `books/${bookId}/pages/`;
-  var params = {
-    Bucket: bucketName,
-    Prefix: prefix,
-  };
-
-  const s3ListObjectsResult = await s3.listObjectsV2(params).promise();
-  if (!s3ListObjectsResult.Contents) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify([]),
-    };
-  }
-
-  const s3ObjectKeys = s3ListObjectsResult.Contents.map((elem) => elem.Key);
-  const pagesWithPrefix = bookPages.pages.map((page) => `${prefix}${page}`);
-  const filteredPages = pagesWithPrefix.filter((page) =>
-    s3ObjectKeys.includes(page)
-  );
+  const pages = await getBookPagesByOrder(bookId);
 
   return {
     statusCode: 200,
     body: JSON.stringify(
-      filteredPages.map((elem) => ({
+      pages.map((elem) => ({
         url: `https://assets.ts-ai-kitkhe.ge/${elem}`,
       }))
     ),
