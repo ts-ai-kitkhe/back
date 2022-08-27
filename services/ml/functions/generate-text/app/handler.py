@@ -12,7 +12,6 @@ import numpy as np
 TXT_FOLDER_PATH = '/text/'
 ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
 
-SERVICE_PATH = "functions/generate-text"
 ROBERTA_TOKENS_MAP_PATH = "models/roberta_tokenizer/special_tokens_map.json"
 ROBERTA_CONFIG_PATH = "models/roberta_tokenizer/tokenizer_config.json"
 ROBERTA_TOKENS_MAP_PATH = "models/roberta_tokenizer/tokenizer.json"
@@ -22,8 +21,8 @@ VOCAB_PATH = "models/vocab/light_vocab.pkl"
 
 class CandidatesSelector:
     def __init__(self):
-        vocab_path = os.path.join(SERVICE_PATH, VOCAB_PATH)
-        tokenizer_path = os.path.join(SERVICE_PATH, TOKENIZER_PATH)
+        vocab_path = VOCAB_PATH
+        tokenizer_path = TOKENIZER_PATH
 
         with open(vocab_path, "rb") as handle:
             self.vocab = pickle.load(handle)
