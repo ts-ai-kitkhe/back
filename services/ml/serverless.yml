@@ -68,7 +68,7 @@ functions:
                   - ${self:custom.S3_ML_BUCKET_NAME}
               object:
                 key:
-                  - prefix: "books/"  
+                  - prefix: "books/"
 
   concatenateText:
     handler: functions.concatenate-text.handler.main
@@ -88,7 +88,7 @@ functions:
                   - ${self:custom.S3_ML_BUCKET_NAME}
               object:
                 key:
-                  - prefix: 'books/'                  
+                  - prefix: "books/"
 
   predictionsUpdate:
     handler: functions.predictions-update.handler.main

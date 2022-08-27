@@ -2,7 +2,7 @@ import { BookPagesRepository, getBody } from "../../libs";
 
 export async function main(event) {
   const body = getBody(event);
-  const pages = body.pages;
+  const pages = [...new Set(body.pages)];
   const bookId = event.pathParameters.id;
 
   const bookPagesRepository = new BookPagesRepository();
