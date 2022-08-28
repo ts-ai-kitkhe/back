@@ -78,6 +78,9 @@ functions:
   concatenateText:
     handler: functions.concatenate-text.handler.main
     timeout: 90
+    package:
+      include:
+        - functions/concatenate-text/*
     environment:
       S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
       CORE_PAGES_GET_ALL_LAMBDA_ARN: ${self:custom.CORE_PAGES_GET_ALL_LAMBDA_ARN}
@@ -111,10 +114,16 @@ functions:
 
   predictionsUpdate:
     handler: functions.predictions-update.handler.main
+    package:
+      include:
+        - functions/predictions-update/*
     events:
       - httpApi:
           method: post
           path: /book/{bookId}/pages/{pageId}/predictions
 
-plugins:
-  - serverless-python-requirements
+package:
+  individually: true
+  exclude:
+    - "*/**"
+
