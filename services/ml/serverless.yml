@@ -141,6 +141,16 @@ functions:
           authorizer:
             name: adminJWTAuthorizer
 
+  booksGet:
+    handler: functions/books-get/handler.main
+    runtime: nodejs16.x
+    environment:
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
+    events:
+      - httpApi:
+          method: GET
+          path: /books/{id}
+
 package:
   individually: true
   exclude:
