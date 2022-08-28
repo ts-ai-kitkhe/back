@@ -5,7 +5,7 @@ custom:
   S3_ASSETS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
   S3_ML_BUCKET_NAME: ml.ts-ai-kitkhe.ge
   # Lambda
-  CORE_PAGES_GET_ALL_LAMBDA_ARN: ${cf:core.PagesGetAllLambdaArn}
+  CORE_PAGES_GET_ALL_LAMBDA_ARN: ${cf:core-${self:provider.stage}.PagesGetAllLambdaArn}
 
 provider:
   name: aws
