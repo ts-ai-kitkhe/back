@@ -50,6 +50,7 @@ def main(event, context):
 
     print("TXT OBJECTS", len(txt_objects))
     txt_path = text_prefix.rsplit('/', 2)[0]
+    txt_path = txt_path + f"/{txt_path.rsplit('/', 1)[-1]}.txt"
     print("TEXT PATH:", txt_path)
     
     full_text = ""
@@ -59,5 +60,5 @@ def main(event, context):
         full_text +=  PAGE_DELIMITER + f" {i} " + PAGE_DELIMITER
         full_text += '\n'
     
-    object = s3.Object(ml_bucket_name, txt_path)
+    object = s3_resource.Object(ml_bucket_name, txt_path)
     object.put(Body=full_text, ContentType='text/plain; charset=utf-8')
