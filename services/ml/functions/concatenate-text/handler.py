@@ -48,7 +48,7 @@ def main(event, context):
     print("BOOK ID:", book_id)
     pages_order = get_pages_by_book_id(book_id)
     print("PAGES ORDER:", pages_order)
-    pages_order = [page.rsplit('.', 1)[0] for page in pages_order]
+    pages_order = [page.get("id", "").rsplit('.', 1)[0] for page in pages_order]
     # objects = ['books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/1.txt', 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/2.txt']
     objects = s3.list_objects_v2(Bucket=bucket_name,Prefix=text_prefix)
     print("objects")
