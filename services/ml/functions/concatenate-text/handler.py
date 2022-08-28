@@ -9,6 +9,7 @@ ml_bucket_name = os.environ["S3_ML_BUCKET_NAME"]
 
 s3 = boto3.client("s3")
 s3_resource = boto3.resource("s3")
+PAGE_DELIMITER = "=" * 20 
 
 def main(event, context):
     # bucket_name = 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/0002.txt'
@@ -48,5 +49,15 @@ def main(event, context):
         txt_objects.append(object_data)
 
     print("TXT OBJECTS", len(txt_objects))
-    txt_path = text_prefix.rsplit('/', 3)[0]
+    txt_path = text_prefix.rsplit('/', 2)[0]
     print("TEXT PATH:", txt_path)
+    
+    full_text = ""
+    for i in range(txt_objects):
+        full_text += txt_objects[i]
+        full_text += '\n'
+        full_text +=  PAGE_DELIMITER + f" {i} " + PAGE_DELIMITER
+        full_text += '\n'
+    
+    object = s3.Object(ml_bucket_name, txt_path)
+    object.put(Body=full_text, ContentType='text/plain; charset=utf-8')
