@@ -27,7 +27,7 @@ def main(event, context):
 
     # text_prefix = 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text'
     text_prefix = key.rsplit('/', 1)[0]
-
+    print("TEXT PREFIX:", text_prefix)
     # objects = ['books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/1.txt', 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/2.txt']
     objects = s3.list_objects_v2(Bucket=bucket_name,Prefix=text_prefix)
     print("objects")
@@ -41,9 +41,12 @@ def main(event, context):
         object_key = object_contents['Key']
         object = s3_resource.Object(bucket_name, object_key)
 
-        object_data = object.get()["Body"].read()
+        object_data = object.get()["Body"].read().decode('utf-8') 
+        print("OBJECT DATA:")
         print(object_data)
 
         txt_objects.append(object_data)
 
     print("TXT OBJECTS", len(txt_objects))
+    txt_path = text_prefix.rsplit('/', 3)[0]
+    print("TEXT PATH:", txt_path)
