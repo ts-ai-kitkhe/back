@@ -1,5 +1,4 @@
 #!/bin/bash
 
-./sync_s3_data.sh
-
+./seed_s3.sh
 yarn workspace core sls invoke local -f booksSeeder

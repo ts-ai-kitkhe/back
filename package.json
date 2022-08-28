@@ -26,6 +26,7 @@
   },
   "scripts": {
     "seed": "./seed.sh",
+    "seed:remove": "./seed_remove.sh",
     "lint:js": "eslint --ext \".js\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:js && yarn lint:prettier",
