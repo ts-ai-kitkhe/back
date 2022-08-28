@@ -37,7 +37,7 @@ export async function main(event) {
       top_letters: [box.letter],
       top_confidences: [1],
     }));
-    data = [...data.data, ...newRects];
+    data.data = [...data.data, ...newRects];
   }
 
   if (modified) {
