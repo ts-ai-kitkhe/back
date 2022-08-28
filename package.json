@@ -25,6 +25,7 @@
     "stylelint-config-standard": "^26.0.0"
   },
   "scripts": {
+    "seed": "./seed.sh",
     "lint:js": "eslint --ext \".js\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:js && yarn lint:prettier",

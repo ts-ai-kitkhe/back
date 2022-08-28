@@ -99,6 +99,8 @@ async function seedBooks() {
       id: "6c943e86-2ce6-40bf-860c-7bb99af82741",
       title: "სვიმონ მეფე",
       author: "დავით კარიჭაშვილი",
+      coverImagePath:
+        "books/6c943e86-2ce6-40bf-860c-7bb99af82741/data/0001.jpg",
       year: 1894,
     },
     {
@@ -122,6 +124,7 @@ async function seedBooks() {
         title: book.title,
         authorName: book.author,
         year: book.year,
+        coverImagePath: book.coverImagePath,
         visibility: "Public",
         addedBy: "tdavi18@freeuni.edu.ge",
       })
