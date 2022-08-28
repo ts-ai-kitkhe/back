@@ -287,6 +287,8 @@ def generate_text(model_response, filtered_corners, predictions) -> str:
         filtered_corners, predictions, 0.9
     )
     all_letters = get_all_leters(f_corners)
+    if len(all_letters) == 0:
+        return ""
     y_letters = project_y_letters(all_letters)
     coord_distances = find_distances_between_coordinates(y_letters)
     lines = get_lines(coord_distances, all_letters, y_letters)
