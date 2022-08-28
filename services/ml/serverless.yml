@@ -4,6 +4,8 @@ custom:
   # S3
   S3_ASSETS_BUCKET_NAME: assets.ts-ai-kitkhe.ge
   S3_ML_BUCKET_NAME: ml.ts-ai-kitkhe.ge
+  # Lambda
+  CORE_PAGES_GET_ALL_LAMBDA_ARN: ${cf:core.PagesGetAllLambdaArn}
 
 provider:
   name: aws
@@ -74,6 +76,7 @@ functions:
     timeout: 90
     environment:
       S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
+      CORE_PAGES_GET_ALL_LAMBDA_ARN: ${self:custom.CORE_PAGES_GET_ALL_LAMBDA_ARN}
     events:
       - eventBridge:
           pattern:

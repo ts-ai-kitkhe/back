@@ -11,6 +11,21 @@ s3 = boto3.client("s3")
 s3_resource = boto3.resource("s3")
 PAGE_DELIMITER = "=" * 20 
 
+
+def get_pages_by_book_id(book_id):
+    lambda_client = boto3.client("lambda")
+    CORE_PAGES_GET_ALL_LAMBDA_ARN = os.getenv("CORE_PAGES_GET_ALL_LAMBDA_ARN")
+
+    result = lambda_client.invoke(
+    FunctionName=CORE_PAGES_GET_ALL_LAMBDA_ARN,
+    InvocationType="RequestResponse",
+    Payload=json.dumps({"pathParameters": {"id": book_id}}),
+    )
+
+    payload = json.loads(result["Payload"].read())
+    return json.loads(payload["body"])
+
+
 def main(event, context):
     # bucket_name = 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/0002.txt'
     bucket_name = event['detail']['bucket']['name']
@@ -29,33 +44,41 @@ def main(event, context):
     # text_prefix = 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text'
     text_prefix = key.rsplit('/', 1)[0]
     print("TEXT PREFIX:", text_prefix)
+    book_id = text_prefix.split('/', 3)[1]
+    print("BOOK ID:", book_id)
+    pages_order = get_pages_by_book_id(book_id)
+    print("PAGES ORDER:", pages_order)
+    pages_order = [page.rsplit('.', 1)[0] for page in pages_order]
     # objects = ['books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/1.txt', 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/2.txt']
     objects = s3.list_objects_v2(Bucket=bucket_name,Prefix=text_prefix)
     print("objects")
     print(objects)
 
-    txt_objects = []
+    txt_objects = {}
     
     for object_contents in objects['Contents']:
         print('object_contents')
         print(object_contents)
         object_key = object_contents['Key']
+        object_file_name = object_key.rsplit('/', 1)[-1].rsplit('.', 1)[0]
+        print("OBJECT FILE NAME:", object_file_name)
         object = s3_resource.Object(bucket_name, object_key)
 
         object_data = object.get()["Body"].read().decode('utf-8') 
         print("OBJECT DATA:")
         print(object_data)
+        txt_objects[object_file_name] = object_data
 
-        txt_objects.append(object_data)
-
-    print("TXT OBJECTS", len(txt_objects))
+    print("TXT OBJECTS LEN:", len(txt_objects))
     txt_path = text_prefix.rsplit('/', 2)[0]
     txt_path = txt_path + f"/{txt_path.rsplit('/', 1)[-1]}.txt"
     print("TEXT PATH:", txt_path)
     
     full_text = ""
-    for i in range(len(txt_objects)):
-        full_text += txt_objects[i]
+    for i in range(len(pages_order)):
+        curr_page_name = pages_order[i]
+
+        full_text += txt_objects.get(curr_page_name, "")
         full_text += '\n'
         full_text +=  PAGE_DELIMITER + f" {i} " + PAGE_DELIMITER
         full_text += '\n'
