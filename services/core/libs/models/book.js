@@ -9,7 +9,7 @@ export class Book extends BaseModel {
 
   get bookPdfUrl() {
     return this.bookPdfPath
-      ? `https://assets.ts-ai-kitkhe.ge/${this.bookPdfPath}`
+      ? `https://assets.ts-ai-kitkhe.ge/${this.bookPdfPath}?${Date.now()}`
       : undefined;
   }
 

@@ -49,7 +49,7 @@ export async function main(event) {
   );
 
   const confidence = totalScores / totalChars;
-  const textUrl = `https://ml.ts-ai-kitkhe.ge/books/${bookId}/${bookId}.txt`;
+  const textUrl = `https://ml.ts-ai-kitkhe.ge/books/${bookId}/${bookId}.txt?${Date.now()}`;
 
   return {
     statusCode: 200,
