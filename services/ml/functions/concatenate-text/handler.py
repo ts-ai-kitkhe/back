@@ -53,7 +53,7 @@ def main(event, context):
     print("TEXT PATH:", txt_path)
     
     full_text = ""
-    for i in range(txt_objects):
+    for i in range(len(txt_objects)):
         full_text += txt_objects[i]
         full_text += '\n'
         full_text +=  PAGE_DELIMITER + f" {i} " + PAGE_DELIMITER
