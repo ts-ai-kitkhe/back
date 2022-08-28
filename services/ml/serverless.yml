@@ -133,7 +133,7 @@ functions:
     handler: functions/predictions-update/handler.main
     runtime: nodejs16.x
     environment:
-      S3_ASSETS_BUCKET_NAME: ${self:custom.S3_ASSETS_BUCKET_NAME}
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
     events:
       - httpApi:
           method: PATCH
