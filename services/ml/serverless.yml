@@ -129,6 +129,30 @@ functions:
                 key:
                   - prefix: "books/"
 
+  predictionDelete:
+    handler: functions.prediction-delete.handler.main
+    package:
+      include:
+        - functions/prediction-delete/*
+        - functions/__init__.py
+    environment:
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
+      S3_ASSETS_BUCKET_NAME: ${self:custom.S3_ASSETS_BUCKET_NAME}
+    events:
+      - eventBridge:
+          pattern:
+            source:
+              - aws.s3
+            detail-type:
+              - Object Deleted
+            detail:
+              bucket:
+                name:
+                  - ${self:custom.S3_ASSETS_BUCKET_NAME}
+              object:
+                key:
+                  - prefix: "books/"
+
   predictionsUpdate:
     handler: functions/predictions-update/handler.main
     runtime: nodejs16.x
