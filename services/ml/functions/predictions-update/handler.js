@@ -68,6 +68,13 @@ export async function main(event) {
     data.data = data.data.filter((box) => !deleted.includes(box.id));
   }
 
+  data.mean_confidence = {
+    score:
+      data.data.reduce((res, box) => res + box.confidence, 0) /
+      data.data.length,
+    count: data.data.length,
+  };
+
   await s3
     .putObject({
       Bucket: S3_ML_BUCKET_NAME,
