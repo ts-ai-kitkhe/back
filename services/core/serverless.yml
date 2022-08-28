@@ -131,6 +131,12 @@ functions:
       DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
       DYNAMO_DB_PAGES_TABLE_NAME: ${self:custom.DYNAMO_DB_PAGES_TABLE_NAME}
 
+  booksSeederRemove:
+    handler: functions/books-seeder-remove/handler.main
+    environment:
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+      DYNAMO_DB_PAGES_TABLE_NAME: ${self:custom.DYNAMO_DB_PAGES_TABLE_NAME}
+
   authorsGetAll:
     handler: functions/authors-get-all/handler.main
     environment:
