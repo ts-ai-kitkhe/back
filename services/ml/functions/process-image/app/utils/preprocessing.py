@@ -1,4 +1,5 @@
 import os
+import statistics
 from typing import Any, Dict, List, Tuple
 
 import cv2
@@ -277,6 +278,7 @@ def input_for_frontend(
     """
     function generates json on the given path for frontend usage, each corner having its id as string.
     example: {  "shape": {"width": 100, "height": 200},
+                "mean_confidence" : 0.75,
                 "data": 
                 [{"id": 0, "letter": "ა",
                 "confidence": 0.99,
@@ -297,9 +299,11 @@ def input_for_frontend(
     """
 
     # assert len(corners) == len(predictions)
-    
+    if len(predictions) == 0:
+        return {"shape": {"width": width, "height": height}, "mean_confidence": float(0), "data": []}
+        
     model_response = {
-        "shape": {"width": width, "height": height}, 
+        "shape": {"width": width, "height": height},
         "data": [
             {
                 "id": i,
@@ -312,6 +316,7 @@ def input_for_frontend(
             for i in range(len(corners))
         ]
     }
+    model_response["mean_confidence"] = statistics.mean([d.get("confidence") for d in model_response["data"]])
     # model_response = [
     #     {
     #         "id": i,
