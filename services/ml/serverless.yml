@@ -22,7 +22,9 @@ provider:
       statements:
         - Effect: "Allow"
           Resource:
+            - "arn:aws:s3:::${self:custom.S3_ASSETS_BUCKET_NAME}"
             - "arn:aws:s3:::${self:custom.S3_ASSETS_BUCKET_NAME}/*"
+            - "arn:aws:s3:::${self:custom.S3_ML_BUCKET_NAME}"
             - "arn:aws:s3:::${self:custom.S3_ML_BUCKET_NAME}/*"
           Action: "s3:*"
 
