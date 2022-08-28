@@ -42,15 +42,19 @@ export async function main(event) {
 
     doc.end();
 
+    const pdfKey = `books/${bookId}/${book.title}.pdf`;
     const { stream, promise } = uploadFromStream({
       Bucket: S3_ASSETS_BUCKET_NAME,
-      Key: `books/${bookId}/${book.title}.pdf`,
+      Key: pdfKey,
       ContentType: "application/pdf",
       ContentDisposition: `inline; filename="${bookId}.pdf"`,
     });
 
     doc.pipe(stream);
-    return promise;
+    await promise;
+
+    book.bookPdfPath = pdfKey;
+    await bookRepository.update(book);
   });
 
   const res = await Promise.allSettled(promises);

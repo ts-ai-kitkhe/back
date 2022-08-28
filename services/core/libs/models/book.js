@@ -7,6 +7,12 @@ export class Book extends BaseModel {
       : undefined;
   }
 
+  get bookPdfUrl() {
+    return this.bookPdfPath
+      ? `https://assets.ts-ai-kitkhe.ge/${this.bookPdfPath}`
+      : undefined;
+  }
+
   toJSON() {
     return {
       ...super.toJSON(),
@@ -18,6 +24,8 @@ export class Book extends BaseModel {
       addedBy: this.addedBy,
       coverImagePath: this.coverImagePath,
       coverImageUrl: this.coverImageUrl,
+      bookPdfPath: this.bookPdfPath,
+      bookPdfUrl: this.bookPdfUrl,
     };
   }
 }
