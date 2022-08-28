@@ -1,9 +1,11 @@
-import { BookRepository } from "../../libs";
+import { BookRepository, BookPagesRepository } from "../../libs";
 
 const bookRepository = new BookRepository();
+const bookPagesRepository = new BookPagesRepository();
 
 export async function main() {
   await seedBooks();
+  await seedBookPages();
 }
 
 async function seedBooks() {
@@ -113,6 +115,32 @@ async function seedBooks() {
         coverImagePath: book.coverImagePath,
         visibility: "Public",
         addedBy: "tdavi18@freeuni.edu.ge",
+      })
+    )
+  );
+}
+
+async function seedBookPages() {
+  const bookPages = [
+    {
+      bookId: "6c943e86-2ce6-40bf-860c-7bb99af82741",
+      pages: [
+        "0001.jpg",
+        "0002.jpg",
+        "0003.jpg",
+        "0004.jpg",
+        "0005.jpg",
+        "0006.jpg",
+        "0007.jpg",
+      ],
+    },
+  ];
+
+  return Promise.all(
+    bookPages.map((bookPage) =>
+      bookPagesRepository.put({
+        bookId: bookPage.bookId,
+        pages: bookPage.pages,
       })
     )
   );
