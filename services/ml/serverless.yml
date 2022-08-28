@@ -6,12 +6,28 @@ custom:
   S3_ML_BUCKET_NAME: ml.ts-ai-kitkhe.ge
   # Lambda
   CORE_PAGES_GET_ALL_LAMBDA_ARN: ${cf:core-${self:provider.stage}.PagesGetAllLambdaArn}
+  # Plugins
+  bundle:
+    sourcemaps: false # Enable source maps
+    linting: false # Disable linting
+    caching: false # Enable Webpack caching
+    concurrency: 2 # Set desired concurrency, defaults to the number of available cores
+    packager: yarn # Specify a packager, 'npm' or 'yarn'. Defaults to 'npm'.
 
 provider:
   name: aws
   region: eu-central-1
   runtime: python3.8
   versionFunctions: false
+  httpApi:
+    cors: true
+    authorizers:
+      adminJWTAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_A5u5syC5t
+        audience:
+          - 4htkustm5ob7lqd45n0ovff66e
   ecr:
     scanOnPush: false
     images:
@@ -32,7 +48,7 @@ provider:
         - Effect: Allow
           Action:
             - lambda:*
-          Resource: '*'
+          Resource: "*"
 
 functions:
   processImage:
@@ -113,17 +129,21 @@ functions:
                   - prefix: "books/"
 
   predictionsUpdate:
-    handler: functions.predictions-update.handler.main
-    package:
-      include:
-        - functions/predictions-update/*
+    handler: functions/predictions-update/handler.main
+    runtime: nodejs16.x
+    environment:
+      S3_ASSETS_BUCKET_NAME: ${self:custom.S3_ASSETS_BUCKET_NAME}
     events:
       - httpApi:
-          method: post
-          path: /book/{bookId}/pages/{pageId}/predictions
+          method: PATCH
+          path: /books/{id}/pages/{filename}/predictions
+          authorizer:
+            name: adminJWTAuthorizer
 
 package:
   individually: true
   exclude:
     - "*/**"
 
+plugins:
+  - serverless-bundle
