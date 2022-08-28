@@ -273,13 +273,16 @@ def filter_by_sides(
 
 
 def input_for_frontend(
-    corners: List[List[int]], predictions: List[Tuple[str, float]], width: int, height: int
+    corners: List[List[int]],
+    predictions: List[Tuple[str, float]],
+    width: int,
+    height: int,
 ) -> List[Dict[str, Any]]:
     """
     function generates json on the given path for frontend usage, each corner having its id as string.
     example: {  "shape": {"width": 100, "height": 200},
                 "mean_confidence" : 0.75,
-                "data": 
+                "data":
                 [{"id": 0, "letter": "ა",
                 "confidence": 0.99,
                 "corners": [[0, 1],[0, 3],[2, 0],[1, 0]],
@@ -300,8 +303,12 @@ def input_for_frontend(
 
     # assert len(corners) == len(predictions)
     if len(predictions) == 0:
-        return {"shape": {"width": width, "height": height}, "mean_confidence": float(0), "data": []}
-        
+        return {
+            "shape": {"width": width, "height": height},
+            "mean_confidence": {"score": float(0), "count": 0},
+            "data": [],
+        }
+
     model_response = {
         "shape": {"width": width, "height": height},
         "data": [
@@ -314,21 +321,14 @@ def input_for_frontend(
                 "top_confidences": [float(p) for p in predictions[i][2][1]],
             }
             for i in range(len(corners))
-        ]
+        ],
     }
-    model_response["mean_confidence"] = statistics.mean([d.get("confidence") for d in model_response["data"]])
-    # model_response = [
-    #     {
-    #         "id": i,
-    #         "letter": predictions[i][0],
-    #         "confidence": float(predictions[i][1]),
-    #         "corners": corners[i],
-    #         "top_letters": predictions[i][2][0],
-    #         "top_confidences": [float(p) for p in predictions[i][2][1]],
-    #     }
-    #     for i in range(len(corners))
-    # ]
-
+    model_response["mean_confidence"] = {
+        "score": float(
+            statistics.mean([d.get("confidence") for d in model_response["data"]])
+        ),
+        "count": len(model_response.get("data")),
+    }
     return model_response
 
 
@@ -400,7 +400,7 @@ def zero_padding(
         resized = cv2.resize(binary_image, dim)
     except:
         print("CHARACTER SHAPE", binary_image.shape)
-        print("SCALE: ", scale)     
+        print("SCALE: ", scale)
         print("RESIZE DIMENSION: ", dim)
         scale = 1
         width = int(binary_image.shape[1] * scale)
