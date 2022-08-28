@@ -8,6 +8,7 @@ export async function main(event) {
     statusCode: 200,
     body: JSON.stringify(
       pages.map((elem) => ({
+        id: elem.split("/").pop(),
         url: `https://assets.ts-ai-kitkhe.ge/${elem}`,
       }))
     ),

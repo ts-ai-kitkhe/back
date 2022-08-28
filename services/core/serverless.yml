@@ -214,12 +214,12 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_IMAGE
 
-Outputs:
-  PagesGetAllLambdaArn:
-    Value:
-      Fn::GetAtt: PagesGetAllLambdaFunction.Arn
-    Export:
-      Name: PagesGetAllLambdaArn
+  Outputs:
+    PagesGetAllLambdaArn:
+      Value:
+        Fn::GetAtt: PagesGetAllLambdaFunction.Arn
+      Export:
+        Name: PagesGetAllLambdaArn
 
 plugins:
   - serverless-bundle
