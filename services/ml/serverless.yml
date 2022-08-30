@@ -132,6 +132,12 @@ functions:
               object:
                 key:
                   - prefix: "books/"
+      - eventBridge:
+          pattern:
+            source:
+              - core
+            detail-type:
+              - Book Pages Updated
 
   textDelete:
     handler: functions.text-delete.handler.main

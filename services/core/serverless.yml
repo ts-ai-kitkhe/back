@@ -30,6 +30,9 @@ provider:
             - Fn::GetAtt: [booksTable, Arn]
             - Fn::GetAtt: [pagesTable, Arn]
           Action: "dynamodb:*"
+        - Effect: "Allow"
+          Resource: "*"
+          Action: "events:*"
 
 custom:
   # Dynamo DBs

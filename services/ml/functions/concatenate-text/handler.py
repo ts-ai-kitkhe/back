@@ -37,7 +37,7 @@ def main(event, context):
         print(f"invalid key passed: {key}")
         return
 
-    if bucket_name != ml_bucket_name:
+    if event.get("source", "") == "aws.s3" and bucket_name != ml_bucket_name:
         print(f"invalid bucket name, expected:{ml_bucket_name}, got: {bucket_name}")
         return
 
@@ -50,7 +50,7 @@ def main(event, context):
     pages_order = [page.get("id", "").rsplit(".", 1)[0] for page in pages_order]
     print("PAGES ORDER:", pages_order)
     # objects = ['books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/1.txt', 'books/8462a56f-f641-4b5c-bfb9-c7cf3b751e63/pages/text/2.txt']
-    objects = s3.list_objects_v2(Bucket=bucket_name, Prefix=text_prefix)
+    objects = s3.list_objects_v2(Bucket=ml_bucket_name, Prefix=text_prefix)
     print("objects")
     print(objects)
 
@@ -62,7 +62,7 @@ def main(event, context):
         object_key = object_contents["Key"]
         object_file_name = object_key.rsplit("/", 1)[-1].rsplit(".", 1)[0]
         print("OBJECT FILE NAME:", object_file_name)
-        object = s3_resource.Object(bucket_name, object_key)
+        object = s3_resource.Object(ml_bucket_name, object_key)
 
         object_data = object.get()["Body"].read().decode("utf-8")
         print("OBJECT DATA:")

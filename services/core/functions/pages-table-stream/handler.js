@@ -5,6 +5,7 @@ import { default as stream } from "stream";
 import { BookRepository } from "../../libs";
 
 const s3 = new AWS.S3();
+const eventbridge = new AWS.EventBridge();
 const S3_ASSETS_BUCKET_NAME = process.env.S3_ASSETS_BUCKET_NAME;
 const SIZE = [595.28, 841.89];
 
@@ -55,10 +56,29 @@ export async function main(event) {
 
     book.bookPdfPath = pdfKey;
     await bookRepository.update(book);
+
+    const pageId = pageImages[0].split("/").pop().split(".").shift();
+    await eventbridge
+      .putEvents({
+        Entries: [
+          {
+            Source: "core",
+            Detail: JSON.stringify({
+              bucket: {
+                name: S3_ASSETS_BUCKET_NAME,
+              },
+              object: {
+                key: `books/${bookId}/pages/text/${pageId}.txt`,
+              },
+            }),
+            DetailType: "Book Pages Updated",
+          },
+        ],
+      })
+      .promise();
   });
 
   const res = await Promise.allSettled(promises);
-  console.log(res);
 }
 
 function uploadFromStream(params) {
