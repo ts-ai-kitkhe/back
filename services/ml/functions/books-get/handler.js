@@ -6,6 +6,19 @@ const s3 = new AWS.S3();
 export async function main(event) {
   const bookId = event.pathParameters.id;
 
+  const bookData = await getBookData(bookId);
+
+  if (!bookData) {
+    return { statusCode: 404 };
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(bookData),
+  };
+}
+
+export async function getBookData(bookId) {
   const prefix = `books/${bookId}/pages/predictions`;
   var params = {
     Bucket: S3_ML_BUCKET_NAME,
@@ -17,7 +30,9 @@ export async function main(event) {
     !s3ListObjectsResult.Contents ||
     s3ListObjectsResult.Contents.length === 0
   ) {
-    return { statusCode: 404 };
+    return {
+      confidence: 0,
+    };
   }
 
   const objects = await Promise.all(
@@ -52,10 +67,7 @@ export async function main(event) {
   const textUrl = `https://ml.ts-ai-kitkhe.ge/books/${bookId}/${bookId}.txt?${Date.now()}`;
 
   return {
-    statusCode: 200,
-    body: JSON.stringify({
-      confidence: confidence ?? 0,
-      textUrl: textUrl,
-    }),
+    confidence: confidence ?? 0,
+    textUrl: textUrl,
   };
 }

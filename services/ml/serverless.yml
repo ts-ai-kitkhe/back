@@ -6,6 +6,8 @@ custom:
   S3_ML_BUCKET_NAME: ml.ts-ai-kitkhe.ge
   # Lambda
   CORE_PAGES_GET_ALL_LAMBDA_ARN: ${cf:core-${self:provider.stage}.PagesGetAllLambdaArn}
+  # Dynamo Db
+  DYNAMO_DB_BOOKS_TABLE_NAME: books
   # Plugins
   bundle:
     sourcemaps: false # Enable source maps
@@ -39,15 +41,17 @@ provider:
     role:
       statements:
         - Effect: "Allow"
+          Action: "s3:*"
           Resource:
             - "arn:aws:s3:::${self:custom.S3_ASSETS_BUCKET_NAME}"
             - "arn:aws:s3:::${self:custom.S3_ASSETS_BUCKET_NAME}/*"
             - "arn:aws:s3:::${self:custom.S3_ML_BUCKET_NAME}"
             - "arn:aws:s3:::${self:custom.S3_ML_BUCKET_NAME}/*"
-          Action: "s3:*"
         - Effect: Allow
-          Action:
-            - lambda:*
+          Action: lambda:*
+          Resource: "*"
+        - Effect: Allow
+          Action: "dynamodb:*"
           Resource: "*"
 
 functions:
@@ -197,6 +201,17 @@ functions:
       - httpApi:
           method: GET
           path: /books/{id}
+
+  booksGetAll:
+    handler: functions/books-get-all/handler.main
+    runtime: nodejs16.x
+    environment:
+      S3_ML_BUCKET_NAME: ${self:custom.S3_ML_BUCKET_NAME}
+      DYNAMO_DB_BOOKS_TABLE_NAME: ${self:custom.DYNAMO_DB_BOOKS_TABLE_NAME}
+    events:
+      - httpApi:
+          method: GET
+          path: /books
 
 package:
   individually: true
