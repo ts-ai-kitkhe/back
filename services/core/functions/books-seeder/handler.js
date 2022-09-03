@@ -160,7 +160,7 @@ async function seedBookPages() {
     },
     {
       bookId: "e6a164c1-fc68-4f19-a0b4-f485d18bed54",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg"],
     },
     {
       bookId: "e3214268-fcee-4328-82b1-0255728e5b88",
@@ -172,23 +172,23 @@ async function seedBookPages() {
     },
     {
       bookId: "21c49d20-9ca3-4ec0-b30d-6c3c4f36947a",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg"],
     },
     {
       bookId: "72264357-6013-476a-820d-4b532965b82e",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg"],
     },
     {
       bookId: "aa024480-c2d9-4075-b17e-2756d3909086",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg"],
     },
     {
       bookId: "4fe1c950-43cc-4dbb-9a8a-ac93806c4a42",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
     },
     {
       bookId: "0b259bf8-d615-4fd0-9d8a-89cd71b60719",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"],
     },
     {
       bookId: "c6b3acf1-fd0c-4aa9-90ac-e630b342de6b",
@@ -200,7 +200,7 @@ async function seedBookPages() {
     },
     {
       bookId: "6c943e86-2ce6-40bf-860c-7bb99af82741",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
+      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"],
     },
     {
       bookId: "dd47ac25-7ba5-4c99-aa0b-872146d5e527",
