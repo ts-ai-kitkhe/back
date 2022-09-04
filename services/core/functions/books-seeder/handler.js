@@ -52,22 +52,6 @@ async function seedBooks() {
         "books/6ad36770-274f-4c40-8103-ac2efec1cd5c/data/Chemi mokvlis samzadisi-1925.jpg",
     },
     {
-      id: "21c49d20-9ca3-4ec0-b30d-6c3c4f36947a",
-      title: "ჭონის შაგირდი",
-      author: "ალექსანდრე შახბარათოვი",
-      year: 1927,
-      coverImagePath:
-        "books/21c49d20-9ca3-4ec0-b30d-6c3c4f36947a/data/Chonis Shegirdi.jpg",
-    },
-    {
-      id: "72264357-6013-476a-820d-4b532965b82e",
-      title: "ერობა და ქალაქი",
-      author: "საქართველოს რესპუბლიკის ქალაქთა კავშირის სტამბა",
-      year: 1920,
-      coverImagePath:
-        "books/72264357-6013-476a-820d-4b532965b82e/data/Eroba da kalaki 8-1920.jpg",
-    },
-    {
       id: "aa024480-c2d9-4075-b17e-2756d3909086",
       title: "იოსებ ყიფშიძე",
       author: "კორნელი დანელია",
@@ -82,22 +66,6 @@ async function seedBooks() {
       year: 1947,
       coverImagePath:
         "books/4fe1c950-43cc-4dbb-9a8a-ac93806c4a42/data/Solomon Tsaishvili 1947.jpg",
-    },
-    {
-      id: "0b259bf8-d615-4fd0-9d8a-89cd71b60719",
-      title: "კავკასიის ამბების შესახებ",
-      author: "მაქსიმ გორკი",
-      year: 1936,
-      coverImagePath:
-        "books/0b259bf8-d615-4fd0-9d8a-89cd71b60719/data/Kavkasiis ambebis shesaxeb.jpg",
-    },
-    {
-      id: "c6b3acf1-fd0c-4aa9-90ac-e630b342de6b",
-      title: "ლიუტერის სჯულის ქართველები საქართველოში",
-      author: "ზაქარია ჭიჭინაძე",
-      year: 1918,
-      coverImagePath:
-        "books/c6b3acf1-fd0c-4aa9-90ac-e630b342de6b/data/liuteris Sjulis Qartvelebi.jpg",
     },
     {
       id: "7acc4f65-c3ea-4ba5-90b3-002efbe04874",
@@ -171,28 +139,12 @@ async function seedBookPages() {
       pages: ["1.jpg", "2.jpg", "3.jpg"],
     },
     {
-      bookId: "21c49d20-9ca3-4ec0-b30d-6c3c4f36947a",
-      pages: ["1.jpg", "2.jpg", "3.jpg"],
-    },
-    {
-      bookId: "72264357-6013-476a-820d-4b532965b82e",
-      pages: ["1.jpg", "2.jpg", "3.jpg"],
-    },
-    {
       bookId: "aa024480-c2d9-4075-b17e-2756d3909086",
       pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg"],
     },
     {
       bookId: "4fe1c950-43cc-4dbb-9a8a-ac93806c4a42",
       pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
-    },
-    {
-      bookId: "0b259bf8-d615-4fd0-9d8a-89cd71b60719",
-      pages: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"],
-    },
-    {
-      bookId: "c6b3acf1-fd0c-4aa9-90ac-e630b342de6b",
-      pages: ["1.jpg", "2.jpg", "3.jpg"],
     },
     {
       bookId: "7acc4f65-c3ea-4ba5-90b3-002efbe04874",
