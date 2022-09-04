@@ -18,6 +18,9 @@ ROBERTA_TOKENS_MAP_PATH = "models/roberta_tokenizer/tokenizer.json"
 TOKENIZER_PATH = "models/roberta_tokenizer"
 VOCAB_PATH = "models/vocab/light_vocab.pkl"
 
+MIN_WORD_LEN = 12
+MIN_THRESH_CONFIDENCE = 0.4
+
 
 class CandidatesSelector:
     def __init__(self):
@@ -59,6 +62,8 @@ candicates_selector = CandidatesSelector()
 
 
 def get_word_variants(word, min_thresh=0.95):
+    if len(word) > MIN_WORD_LEN:
+        min_thresh = MIN_THRESH_CONFIDENCE
     word_vars = [""]
     probs = [1.0]
     for char_var in word:
